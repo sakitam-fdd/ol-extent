@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>图层放大镜</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <link rel="stylesheet" href="../../node_modules/openlayers/dist/ol.css">
+  <style>
+    html, body, #map {
+      width: 100%;
+      height: 100%;
+      padding: 0;
+      margin: 0;
+    }
+    .tool {
+      position: absolute;
+      top: 10px;
+      left: calc(50% - 290px);
+    }
+    .ol-viewport {
+      position: inherit!important;
+    }
+  </style>
+</head>
+<body>
+<div class="tool">
+  <button onclick="_addInteraction()">添加放大镜</button>
+  <button onclick="_removeInteraction()">移除放大镜</button>
+</div>
+<div class="map" id="map"></div>
+<script src="../../node_modules/openlayers/dist/ol.js"></script>
+<script src="../../dist/olInteractionLayerMagnify.js"></script>
+<script type="text/javascript">
+  var firstLayer = new ol.layer.Tile({
+    source: new ol.source.OSM({
+      url: 'https://{a-c}.tile.openstreetmap.org/{z}/{x}/{y}.png'
+    })
+  })
+  var map = new ol.Map({
+    layers: [
+      firstLayer
+    ],
+    target: 'map',
+    view: new ol.View({
+      center: ol.proj.fromLonLat([-109, 46.5]),
+      zoom: 6
+    })
+  });
+
+  var LayerMagnify = new ol.interaction.LayerMagnify({
+    magnifyLayer: firstLayer
+  });
+
+  function _addInteraction () {
+    map.addInteraction(LayerMagnify);
+  }
+
+  function _removeInteraction () {
+    map.removeInteraction(LayerMagnify);
+  }
+</script>
+</body>
+</html>
