@@ -10,6 +10,7 @@
     "olControlBZoomSlider": "src/control/BZoomSlider.js",
     "olInteractionLayerMagnify": "src/interaction/layerMagnify.js",
     "olInteractionLayerSpyglass": "src/interaction/layerSpyglass.js",
+    "olToolsPrintfMap": "src/tools/printfMap.js",
     "olExtent": "src/index.js"
   },
   "scripts": {
@@ -38,6 +39,7 @@
     "url": "https://github.com/sakitam-fdd/ol-extent.git"
   },
   "dependencies": {
+    "lodash": "^4.17.4",
     "nature-dom-util": "^1.1.0",
     "openlayers": "^4.3.1",
     "pepjs": "^0.4.3"
