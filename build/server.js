@@ -13,12 +13,12 @@ var webpackConfig = process.env.NODE_ENV === 'testing'
   : require('./webpack.dev.conf')
 
 // default port where dev server listens for incoming traffic
-var port = process.env.PORT || config.dev.port
+var port = process.env.PORT || config.server.port
 // automatically open browser, if not set will be false
-var autoOpenBrowser = !!config.dev.autoOpenBrowser
+var autoOpenBrowser = !!config.server.autoOpenBrowser
 // Define HTTP proxies to your custom API backend
 // https://github.com/chimurai/http-proxy-middleware
-var proxyTable = config.dev.proxyTable
+var proxyTable = config.server.proxyTable
 
 var app = express()
 var compiler = webpack(webpackConfig)
@@ -59,8 +59,8 @@ app.use(devMiddleware)
 app.use(hotMiddleware)
 
 // serve pure static assets
-var staticPath = config.dev.htmlPath
-app.use(staticPath, express.static('./'))
+var staticPath = 'src'
+app.use(staticPath, express.static('./src'))
 
 var uri = 'http://localhost:' + port
 

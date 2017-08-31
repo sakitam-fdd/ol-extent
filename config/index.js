@@ -10,13 +10,15 @@ module.exports = {
   dev: {
     env: require('./dev.env'),
     devtoolSourceMap: '#source-map',
+    cssSourceMap: true
+  },
+  server: {
+    env: require('./dev.env'),
     port: 6060,
-    htmlPath: path.resolve(__dirname, '../example'),
     autoOpenBrowser: true,
     assetsSubDirectory: '',
     assetsPublicPath: '/',
-    proxyTable: {},
-    cssSourceMap: true
+    proxyTable: {}
   },
   base: {
     fileName: 'olExtent',

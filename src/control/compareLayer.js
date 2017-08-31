@@ -2,8 +2,8 @@
  * Created by FDD on 2017/7/28.
  * @desc 用于图层比较
  */
-import '../scss/compareLayer.scss'
-import * as css from '../dom/css'
+import '../scss/compareLayer'
+import {BASE_CLASS_NAME} from '../constants'
 import * as htmlUtils from 'nature-dom-util/src/utils/domUtils'
 import * as Events from 'nature-dom-util/src/events/Events'
 import 'pepjs'
@@ -51,7 +51,7 @@ ol.control.CompareLayer = function (beforeMap, afterMap, params) {
    * @private
    * @type {Element}
    */
-  this.element_ = htmlUtils.create('div', (this.className + ' ' + css.CLASS_UNSELECTABLE))
+  this.element_ = htmlUtils.create('div', (this.className + ' ' + BASE_CLASS_NAME.CLASS_UNSELECTABLE))
 
   /**
    * @private

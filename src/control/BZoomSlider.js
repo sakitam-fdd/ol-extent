@@ -3,7 +3,7 @@
  * @desc 定制缩放控制条(仿百度)
  */
 import '../scss/zoomSlider.scss'
-import * as css from '../dom/css'
+import {BASE_CLASS_NAME} from '../constants'
 import * as htmlUtils from 'nature-dom-util/src/utils/domUtils'
 import * as Events from 'nature-dom-util/src/events/Events'
 import {EventType} from 'nature-dom-util/src/events/EventType'
@@ -100,44 +100,44 @@ ol.control.BZoomSlider = function (params) {
    * @private
    * @type {Element}
    */
-  this.element = htmlUtils.create('div', (className + ' ' + css.CLASS_UNSELECTABLE))
+  this.element = htmlUtils.create('div', (className + ' ' + BASE_CLASS_NAME.CLASS_UNSELECTABLE))
 
-  let translateContent = htmlUtils.create('div', ('hmap-zoom-slider-translate-content' + ' ' + css.CLASS_SELECTABLE), this.element)
+  let translateContent = htmlUtils.create('div', ('hmap-zoom-slider-translate-content' + ' ' + BASE_CLASS_NAME.CLASS_SELECTABLE), this.element)
 
-  let silderContent = htmlUtils.create('div', ('hmap-zoom-slider-content' + ' ' + css.CLASS_SELECTABLE), this.element)
+  let silderContent = htmlUtils.create('div', ('hmap-zoom-slider-content' + ' ' + BASE_CLASS_NAME.CLASS_SELECTABLE), this.element)
 
-  let translateN = htmlUtils.create('div', ('hmap-zoom-slider-button hmap-zoom-slider-translate-n' + ' ' + css.CLASS_SELECTABLE), translateContent)
+  let translateN = htmlUtils.create('div', ('hmap-zoom-slider-button hmap-zoom-slider-translate-n' + ' ' + BASE_CLASS_NAME.CLASS_SELECTABLE), translateContent)
   translateN.setAttribute('title', '向上平移')
   Events.listen(translateN, EventType.CLICK,
     ol.control.BZoomSlider.prototype.handletranslateClick_.bind(this, 'translateN'))
-  let translateS = htmlUtils.create('div', ('hmap-zoom-slider-button hmap-zoom-slider-translate-s' + ' ' + css.CLASS_SELECTABLE), translateContent)
+  let translateS = htmlUtils.create('div', ('hmap-zoom-slider-button hmap-zoom-slider-translate-s' + ' ' + BASE_CLASS_NAME.CLASS_SELECTABLE), translateContent)
   translateS.setAttribute('title', '向下平移')
   Events.listen(translateS, EventType.CLICK,
     ol.control.BZoomSlider.prototype.handletranslateClick_.bind(this, 'translateS'))
-  let translateW = htmlUtils.create('div', ('hmap-zoom-slider-button hmap-zoom-slider-translate-w' + ' ' + css.CLASS_SELECTABLE), translateContent)
+  let translateW = htmlUtils.create('div', ('hmap-zoom-slider-button hmap-zoom-slider-translate-w' + ' ' + BASE_CLASS_NAME.CLASS_SELECTABLE), translateContent)
   translateW.setAttribute('title', '向左平移')
   Events.listen(translateW, EventType.CLICK,
     ol.control.BZoomSlider.prototype.handletranslateClick_.bind(this, 'translateW'))
-  let translateE = htmlUtils.create('div', ('hmap-zoom-slider-button hmap-zoom-slider-translate-e' + ' ' + css.CLASS_SELECTABLE), translateContent)
+  let translateE = htmlUtils.create('div', ('hmap-zoom-slider-button hmap-zoom-slider-translate-e' + ' ' + BASE_CLASS_NAME.CLASS_SELECTABLE), translateContent)
   translateE.setAttribute('title', '向右平移')
   Events.listen(translateE, EventType.CLICK,
     ol.control.BZoomSlider.prototype.handletranslateClick_.bind(this, 'translateE'))
-  let zoomIn = htmlUtils.create('div', ('hmap-zoom-slider-zoom-in' + ' ' + css.CLASS_SELECTABLE), silderContent)
+  let zoomIn = htmlUtils.create('div', ('hmap-zoom-slider-zoom-in' + ' ' + BASE_CLASS_NAME.CLASS_SELECTABLE), silderContent)
   zoomIn.setAttribute('title', '放大')
   Events.listen(zoomIn, EventType.CLICK,
     ol.control.BZoomSlider.prototype.handleZoomClick_.bind(this, 1))
 
-  let zoomOut = htmlUtils.create('div', ('hmap-zoom-slider-zoom-out' + ' ' + css.CLASS_SELECTABLE), silderContent)
+  let zoomOut = htmlUtils.create('div', ('hmap-zoom-slider-zoom-out' + ' ' + BASE_CLASS_NAME.CLASS_SELECTABLE), silderContent)
   zoomOut.setAttribute('title', '缩小')
   Events.listen(zoomOut, EventType.CLICK,
     ol.control.BZoomSlider.prototype.handleZoomClick_.bind(this, -1))
 
-  let slider = htmlUtils.create('div', ('hmap-zoom-slider-zoom-slider' + ' ' + css.CLASS_SELECTABLE), silderContent)
-  this.sliderBackgroundTop = htmlUtils.create('div', ('slider-background-top' + ' ' + css.CLASS_SELECTABLE), slider)
-  this.sliderBackgroundBottom = htmlUtils.create('div', ('slider-background-bottom' + ' ' + css.CLASS_SELECTABLE), slider)
-  let sliderBackgroundMask = htmlUtils.create('div', ('slider-background-mask' + ' ' + css.CLASS_SELECTABLE), slider)
+  let slider = htmlUtils.create('div', ('hmap-zoom-slider-zoom-slider' + ' ' + BASE_CLASS_NAME.CLASS_SELECTABLE), silderContent)
+  this.sliderBackgroundTop = htmlUtils.create('div', ('slider-background-top' + ' ' + BASE_CLASS_NAME.CLASS_SELECTABLE), slider)
+  this.sliderBackgroundBottom = htmlUtils.create('div', ('slider-background-bottom' + ' ' + BASE_CLASS_NAME.CLASS_SELECTABLE), slider)
+  let sliderBackgroundMask = htmlUtils.create('div', ('slider-background-mask' + ' ' + BASE_CLASS_NAME.CLASS_SELECTABLE), slider)
   sliderBackgroundMask.setAttribute('title', '缩放到此级别')
-  this.sliderBar = htmlUtils.create('div', ('slider-bar' + ' ' + css.CLASS_SELECTABLE), slider)
+  this.sliderBar = htmlUtils.create('div', ('slider-bar' + ' ' + BASE_CLASS_NAME.CLASS_SELECTABLE), slider)
   this.sliderBar.setAttribute('title', '滑动缩放地图')
   /**
    * 滑块容器
