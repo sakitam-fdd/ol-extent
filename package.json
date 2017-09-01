@@ -10,6 +10,7 @@
     "olControlBZoomSlider": "src/control/BZoomSlider.js",
     "olInteractionLayerMagnify": "src/interaction/layerMagnify.js",
     "olInteractionLayerSpyglass": "src/interaction/layerSpyglass.js",
+    "olPopover": "src/overlay/popover.js",
     "olToolsPrintfMap": "src/tools/printfMap.js",
     "olExtent": "src/index.js"
   },
