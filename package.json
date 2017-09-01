@@ -10,6 +10,7 @@
     "olControlBZoomSlider": "src/control/BZoomSlider.js",
     "olInteractionLayerMagnify": "src/interaction/layerMagnify.js",
     "olInteractionLayerSpyglass": "src/interaction/layerSpyglass.js",
+    "olStyleOptions": "src/style/styleOptions.js",
     "olPopover": "src/overlay/popover.js",
     "olSourceBaidu": "src/source/Baidu.js",
     "olSourceGaode": "src/source/Gaode.js",
