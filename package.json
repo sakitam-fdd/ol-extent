@@ -11,6 +11,9 @@
     "olInteractionLayerMagnify": "src/interaction/layerMagnify.js",
     "olInteractionLayerSpyglass": "src/interaction/layerSpyglass.js",
     "olPopover": "src/overlay/popover.js",
+    "olSourceBaidu": "src/source/Baidu.js",
+    "olSourceGaode": "src/source/Gaode.js",
+    "olSourceGoogle": "src/source/Google.js",
     "olToolsPrintfMap": "src/tools/printfMap.js",
     "olExtent": "src/index.js"
   },
