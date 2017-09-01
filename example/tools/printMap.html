@@ -27,6 +27,7 @@
 <body>
 <div class="tool">
   <button class="btn btn-success" onclick="getImages()">获取图片</button>
+  <button class="btn btn-success" onclick="getPDF()">获取PDF</button>
 </div>
 <div class="map" id="map"></div>
 <script src="../../node_modules/openlayers/dist/ol.js"></script>
@@ -45,12 +46,18 @@
     })
   });
 
+  var printTools = new ol.tools.PrintfMap(map)
   function getImages () {
-    var printTools = new ol.tools.PrintfMap(map)
-    printTools.getImage({
+    printTools.DownLoadImage({
+      fileName: 'myMap',
       printfType: 'png'
-    }).then(function (res) {
-      console.log(res)
+    })
+  }
+
+  function getPDF () {
+    printTools.DownLoadPDF({
+      fileName: 'myMap',
+      format: 'A4'
     })
   }
 </script>
