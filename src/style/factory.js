@@ -3,7 +3,7 @@
  * @desc 通过json获取样式
  */
 
-ol.style.StyleOptions = function (options) {
+ol.style.Factory = function (options) {
   let option = (options && typeof options === 'object') ? options : {}
   let style = new ol.style.Style({})
   if (option['geometry'] && option['geometry'] instanceof ol.geom.Geometry) {
@@ -33,7 +33,7 @@ ol.style.StyleOptions = function (options) {
  * @returns {*}
  * @private
  */
-ol.style.StyleOptions.prototype._getRegularShape = function (options) {
+ol.style.Factory.prototype._getRegularShape = function (options) {
   try {
     let regularShape = new ol.style.RegularShape({
       fill: (this._getFill(options['fill']) || undefined),
@@ -60,7 +60,7 @@ ol.style.StyleOptions.prototype._getRegularShape = function (options) {
  * @returns {*}
  * @private
  */
-ol.style.StyleOptions.prototype._getImage = function (options) {
+ol.style.Factory.prototype._getImage = function (options) {
   try {
     let image
     options = options || {}
@@ -81,7 +81,7 @@ ol.style.StyleOptions.prototype._getImage = function (options) {
  * @returns {ol.style.Icon}
  * @private
  */
-ol.style.StyleOptions.prototype._getIcon = function (options) {
+ol.style.Factory.prototype._getIcon = function (options) {
   try {
     options = options || {}
     let icon = new ol.style.Icon({
@@ -114,7 +114,7 @@ ol.style.StyleOptions.prototype._getIcon = function (options) {
  * @returns {ol.style.Stroke}
  * @private
  */
-ol.style.StyleOptions.prototype._getStroke = function (options) {
+ol.style.Factory.prototype._getStroke = function (options) {
   try {
     options = options || {}
     let stroke = new ol.style.Stroke({
@@ -138,7 +138,7 @@ ol.style.StyleOptions.prototype._getStroke = function (options) {
  * @returns {ol.style.Text}
  * @private
  */
-ol.style.StyleOptions.prototype._getText = function (options) {
+ol.style.Factory.prototype._getText = function (options) {
   try {
     let text = new ol.style.Text({
       font: ((options['textFont'] && typeof options['textFont'] === 'string') ? options['textFont'] : '10px sans-serif'),
@@ -165,7 +165,7 @@ ol.style.StyleOptions.prototype._getText = function (options) {
  * @returns {ol.style.Fill}
  * @private
  */
-ol.style.StyleOptions.prototype._getFill = function (options) {
+ol.style.Factory.prototype._getFill = function (options) {
   try {
     options = options || {}
     let fill = new ol.style.Fill({
@@ -177,5 +177,5 @@ ol.style.StyleOptions.prototype._getFill = function (options) {
   }
 }
 
-let olStyleOptions = ol.style.StyleOptions
-export default olStyleOptions
+let olStyleFactory = ol.style.Factory
+export default olStyleFactory
