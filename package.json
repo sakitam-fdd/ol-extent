@@ -10,6 +10,7 @@
     "olControlBZoomSlider": "src/control/BZoomSlider.js",
     "olInteractionLayerMagnify": "src/interaction/layerMagnify.js",
     "olInteractionLayerSpyglass": "src/interaction/layerSpyglass.js",
+    "olInteractionMeasureTool": "src/interaction/measureTool.js",
     "olStyleFactory": "src/style/factory.js",
     "olPopover": "src/overlay/popover.js",
     "olSourceBaidu": "src/source/Baidu.js",
@@ -44,6 +45,7 @@
     "url": "https://github.com/sakitam-fdd/ol-extent.git"
   },
   "dependencies": {
+    "clone-deep": "^1.0.0",
     "file-saver": "^1.3.3",
     "jspdf": "^1.3.3",
     "nature-dom-util": "^1.1.0",

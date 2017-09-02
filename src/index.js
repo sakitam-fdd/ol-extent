@@ -6,6 +6,7 @@ import olControlBZoomSlider from './control/BZoomSlider'
 import olControlCompareLayer from './control/compareLayer'
 import olInteractionLayerMagnify from './interaction/layerMagnify'
 import olInteractionLayerSpyglass from './interaction/layerSpyglass'
+import olInteractionMeasureTool from './interaction/measureTool'
 import olStyleFactory from './style/factory'
 import olPopover from './overlay/popover'
 import olSourceBaidu from './source/Baidu'
@@ -18,6 +19,7 @@ export {
   olControlCompareLayer,
   olInteractionLayerMagnify,
   olInteractionLayerSpyglass,
+  olInteractionMeasureTool,
   olStyleFactory,
   olPopover,
   olSourceGoogle,

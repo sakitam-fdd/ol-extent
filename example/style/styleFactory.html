@@ -19,7 +19,7 @@
 <div id="map"></div>
 <script src="../../node_modules/openlayers/dist/ol.js"></script>
 <script src="../../dist/olSourceGoogle.js"></script>
-<script src="../../dist/olStyleOptions.js"></script>
+<script src="../../dist/olStyleFactory.js"></script>
 <script type="text/javascript">
   var map = new ol.Map({
     layers: [
@@ -56,7 +56,7 @@
                   'fill': {
                     'fillColor': 'rgba(255, 255, 255, 0.8)'
                   },
-                  'points': 1,
+                  'points': Infinity,
                   'radius': 20,
                   'stroke': {
                     'strokeColor': 'rgba(255,0,0,1)',
@@ -119,7 +119,7 @@
   var styleFunction = function (feature) {
     var properties = feature.getProperties()
     if (properties['style']) {
-      return new ol.style.StyleOptions(properties['style'])
+      return new ol.style.Factory(properties['style'])
     }
   };
   var vectorLayer = new ol.layer.Vector({
