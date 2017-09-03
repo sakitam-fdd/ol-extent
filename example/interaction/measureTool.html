@@ -6,12 +6,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <link rel="stylesheet" href="../../node_modules/openlayers/dist/ol.css">
   <link rel="stylesheet" href="../css/button.css">
+  <link rel="stylesheet" href="../../dist/css/olInteractionMeasureTool.css">
   <style>
     html, body, #map {
       width: 100%;
       height: 100%;
       padding: 0;
       margin: 0;
+      overflow: hidden;
     }
     .tool {
       position: absolute;
@@ -49,11 +51,11 @@
   var measureTool = new ol.interaction.MeasureTool()
   map.addInteraction(measureTool)
   function measure () {
-    measureTool.active('measureLength')
+    measureTool.setActive(true, 'measureLength')
   }
 
   function clearer () {
-    measureTool.disActive()
+    measureTool.setActive(false)
     map.removeInteraction(measureTool)
   }
 </script>

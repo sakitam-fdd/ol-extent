@@ -1,5 +1,7 @@
 import olStyleFactory from '../style/factory'
 import olLayerLayerUtils from '../layer/layerUtils'
+import {getuuid} from '../utils/utils'
+import '../scss/measureTool.scss'
 ol.interaction.MeasureTool = function (params) {
   this.options = params || {}
 
@@ -23,6 +25,12 @@ ol.interaction.MeasureTool = function (params) {
       type: 'Polygon'
     }
   }
+
+  /**
+   * 当前测量类型
+   * @type {string}
+   */
+  this.measureType = ''
 
   /**
    * 是否使用地理测量方式
@@ -49,6 +57,12 @@ ol.interaction.MeasureTool = function (params) {
   this.draw = null
 
   /**
+   * 工具是否激活
+   * @type {boolean}
+   */
+  this.isActive = false
+
+  /**
    * drawStyle
    * @type {{}}
    */
@@ -57,8 +71,22 @@ ol.interaction.MeasureTool = function (params) {
       fillColor: 'rgba(67, 110, 238, 0.4)'
     },
     stroke: {
-      strokeColor: 'rgba(242, 123, 57, 1)',
-      strokeWidth: 2
+      strokeColor: 'rgba(249, 185, 154, 1)',
+      strokeWidth: 2.5
+    },
+    image: {
+      type: '',
+      image: {
+        fill: {
+          fillColor: 'rgba(255, 255, 255, 0.8)'
+        },
+        points: Infinity,
+        radius: 4,
+        stroke: {
+          strokeColor: 'rgba(255, 0, 0, 1)',
+          strokeWidth: 1.5
+        }
+      }
     }
   }
   if (this.options['drawStyle'] && typeof this.options['drawStyle'] === 'object') {
@@ -74,17 +102,21 @@ ol.interaction.MeasureTool = function (params) {
       fillColor: 'rgba(67, 110, 238, 0.4)'
     },
     stroke: {
-      strokeColor: 'rgba(242, 123, 57, 1)',
-      strokeWidth: 2
+      strokeColor: 'rgba(253, 128, 68, 1)',
+      strokeWidth: 3
     },
-    circle: {
-      circleRadius: 1,
-      stroke: {
-        strokeColor: 'rgba(255, 0, 0, 1)',
-        strokeWidth: 1
-      },
-      fill: {
-        fillColor: 'rgba(255, 255, 255, 1)'
+    image: {
+      type: '',
+      image: {
+        fill: {
+          fillColor: 'rgba(255, 255, 255, 0.8)'
+        },
+        points: Infinity,
+        radius: 4,
+        stroke: {
+          strokeColor: 'rgba(255, 0, 0, 1)',
+          strokeWidth: 1.5
+        }
       }
     }
   }
@@ -106,7 +138,6 @@ ol.interaction.MeasureTool = function (params) {
   ol.interaction.Pointer.call(this, {
     handleMoveEvent: ol.interaction.MeasureTool.handleMoveEvent_,
     handleDownEvent: ol.interaction.MeasureTool.handleDownEvent_,
-    handleDragEvent: ol.interaction.MeasureTool.handleDragEvent_,
     handleUpEvent: ol.interaction.MeasureTool.handleUpEvent_
   })
 }
@@ -118,7 +149,7 @@ ol.inherits(ol.interaction.MeasureTool, ol.interaction.Pointer)
  * @param mapBrowserEvent
  */
 ol.interaction.MeasureTool.handleMoveEvent_ = function (mapBrowserEvent) {
-  this.getMap().render()
+  this.beforeDrawPointClickHandler(mapBrowserEvent)
 }
 
 /**
@@ -127,16 +158,7 @@ ol.interaction.MeasureTool.handleMoveEvent_ = function (mapBrowserEvent) {
  * @private
  */
 ol.interaction.MeasureTool.handleDownEvent_ = function (event) {
-  return true
-}
-
-/**
- * 处理拖拽事件
- * @param event
- * @private
- */
-ol.interaction.MeasureTool.handleDragEvent_ = function (event) {
-  console.log(event)
+  return false
 }
 
 /**
@@ -155,9 +177,35 @@ ol.interaction.MeasureTool.prototype.addDrawInteractions = function (type) {
     type: type,
     style: style_
   })
+  this.draw.set('uuid', getuuid())
   this.getMap().addInteraction(this.draw)
   this.draw.on('drawstart', this.drawStartHandle_, this)
   this.draw.on('drawend', this.drawEndHandle_, this)
+  this.getMap().on('click', this.drawClickHandle_, this)
+}
+
+/**
+ * 单击事件处理
+ * @param event
+ * @private
+ */
+ol.interaction.MeasureTool.prototype.drawClickHandle_ = function (event) {
+  console.log(event)
+  if (this.drawStart_ && !event.dragging) {
+    this.addMeasurecircle(event.coordinate)
+  }
+}
+
+/**
+ * 添加点击测量时的圆圈
+ * @param coordinate
+ */
+ol.interaction.MeasureTool.prototype.addMeasurecircle = function (coordinate) {
+  let feature = new ol.Feature({
+    uuid: this.draw.get('uuid'),
+    geometry: new ol.geom.Point(coordinate)
+  })
+  this.layer.getSource().addFeature(feature)
 }
 
 /**
@@ -166,7 +214,7 @@ ol.interaction.MeasureTool.prototype.addDrawInteractions = function (type) {
  * @private
  */
 ol.interaction.MeasureTool.prototype.drawStartHandle_ = function (event) {
-  console.log(event)
+  this.drawStart_ = true
 }
 
 /**
@@ -178,27 +226,56 @@ ol.interaction.MeasureTool.prototype.drawEndHandle_ = function (event) {
   console.log(event)
 }
 
+// ol.interaction.MeasureTool.prototype.addclickEventListener
+
+/**
+ * 点击之前的帮助信息
+ * @param event
+ */
+ol.interaction.MeasureTool.prototype.beforeDrawPointClickHandler = function (event) {
+  if (!this.measureHelpTooltip && this.getActive()) {
+    let helpTooltipElement = document.createElement('span')
+    if (this.measureTypes.measureLength['name'] === this.measureType) {
+      helpTooltipElement.className = 'hamp-js-measure hamp-js-measure-length'
+      helpTooltipElement.innerHTML = '单击开始测距'
+    } else {
+      helpTooltipElement.className = 'hamp-js-measure hamp-js-measure-area'
+      helpTooltipElement.innerHTML = '单击开始测面'
+    }
+    this.measureHelpTooltip = new ol.Overlay({
+      element: helpTooltipElement,
+      offset: [15, -10],
+      positioning: 'center-right'
+    })
+    this.measureHelpTooltip.set('layerName', this.layerName)
+    this.getMap().addOverlay(this.measureHelpTooltip)
+  } else if (this.measureHelpTooltip && this.measureHelpTooltip instanceof ol.Overlay) {
+    this.measureHelpTooltip.setPosition(event.coordinate)
+  }
+}
+
 /**
  * 激活测量工具
+ * @param active
  * @param key
  */
-ol.interaction.MeasureTool.prototype.active = function (key) {
-  if (key && this.measureTypes.hasOwnProperty(key) && !this.layer) {
+ol.interaction.MeasureTool.prototype.setActive = function (active, key) {
+  if (active && key && this.measureTypes.hasOwnProperty(key) && !this.layer) {
+    this.isActive = active
+    this.measureType = key
     let _style = new olStyleFactory(this.finshStyle)
     this.layer = new olLayerLayerUtils(this.getMap()).createVectorLayer(this.layerName, {
       create: true
     })
     this.layer.setStyle(_style)
     this.addDrawInteractions(this.measureTypes[key]['type'])
+  } else {
+    this.isActive = false
   }
 }
 
-/**
- * 取消激活工具
- * @param params
- */
-ol.interaction.MeasureTool.prototype.disActive = function (params) {
-  console.log(params)
+ol.interaction.MeasureTool.prototype.getActive = function () {
+  return this.isActive
 }
 
 /**
