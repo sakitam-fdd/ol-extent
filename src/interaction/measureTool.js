@@ -23,6 +23,10 @@ ol.interaction.MeasureTool = function (params) {
     measureArea: {
       name: 'measureArea',
       type: 'Polygon'
+    },
+    measureCircle: {
+      name: 'measureCircle',
+      type: 'Circle'
     }
   }
 
@@ -231,6 +235,9 @@ ol.interaction.MeasureTool.prototype.drawStartHandle_ = function (event) {
     } else if (geom instanceof ol.geom.Polygon) {
       let area = this.formatData(geom)
       that.draw.set('measureResult', area)
+    } else if (geom instanceof ol.geom.Circle) {
+      let area = this.formatData(geom)
+      that.draw.set('measureResult', area)
     }
   })
 }
@@ -248,10 +255,13 @@ ol.interaction.MeasureTool.prototype.drawEndHandle_ = function (event) {
   let coordinates = feature.getGeometry().getLastCoordinate()
   if (this.measureTypes.measureLength['name'] === this.measureType) {
     this.addMeasurecircle(coordinates)
-    this.addMeasureOverlay(coordinates, this.draw.get('measureResult'), '止点')
-  } else {
+    this.addMeasureOverlay(coordinates, this.draw.get('measureResult'), 'length')
+  } else if (this.measureTypes.measureArea['name'] === this.measureType) {
     let center = ol.extent.getCenter(feature.getGeometry().getExtent())
-    this.addMeasureOverlay(center, this.draw.get('measureResult'), '测面结果')
+    this.addMeasureOverlay(center, this.draw.get('measureResult'), 'area')
+  } else if (this.measureTypes.measureCircle['name'] === this.measureType) {
+    let center = ol.extent.getCenter(feature.getGeometry().getExtent())
+    this.addMeasureOverlay(center, this.draw.get('measureResult'), 'circle')
   }
   this.addMeasureRemoveButton(coordinates)
   this.setTool(false)
@@ -320,7 +330,7 @@ ol.interaction.MeasureTool.prototype.afterDrawPointClickHandler = function (even
 ol.interaction.MeasureTool.prototype.addMeasureOverlay = function (coordinate, length, type) {
   let measureResult = document.createElement('span')
   let measureOverlay = null
-  if (type === '止点') {
+  if (type === 'length') {
     measureResult.className = 'hmap-measure-end-overlay-label'
     measureResult.innerHTML = "总长：<span class='measure-end-label'>" + length + '</span>'
     measureOverlay = new ol.Overlay({
@@ -329,7 +339,7 @@ ol.interaction.MeasureTool.prototype.addMeasureOverlay = function (coordinate, l
       offset: [10, 10],
       positioning: 'top-left'
     })
-  } else if (type === '测面结果') {
+  } else if (type === 'area') {
     measureResult.className = 'hmap-measure-overlay-label'
     measureResult.innerHTML = '<span class="measure-label">' + length + '</span>'
     measureOverlay = new ol.Overlay({
@@ -337,6 +347,24 @@ ol.interaction.MeasureTool.prototype.addMeasureOverlay = function (coordinate, l
       position: coordinate,
       offset: [0, 0],
       positioning: 'center-center'
+    })
+  } else if (type === 'circle') {
+    measureResult.className = 'hmap-measure-overlay-label'
+    measureResult.innerHTML = '<span class="measure-label">' + length + '</span>'
+    measureOverlay = new ol.Overlay({
+      element: measureResult,
+      position: coordinate,
+      offset: [0, 0],
+      positioning: 'center-center'
+    })
+  } else {
+    measureResult.className = 'hmap-measure-overlay-label'
+    measureResult.innerHTML = length
+    measureOverlay = new ol.Overlay({
+      element: measureResult,
+      position: coordinate,
+      offset: [10, 0],
+      positioning: 'center-left'
     })
   }
   measureOverlay.set('layerName', this.layerName)
@@ -509,7 +537,7 @@ ol.interaction.MeasureTool.prototype.formatData = function (geom) {
       } else {
         output = Math.round(geom.getLength() * 100) / 100
       }
-    } else if (this.measureTypes.measureArea['name'] === this.measureType) {
+    } else if (this.measureType === 'measureArea') {
       if (this.isGeodesic) {
         let sourceProj = this.getMap().getView().getProjection()
         let geometry = /** @type {ol.geom.Polygon} */(geom.clone().transform(
@@ -525,6 +553,24 @@ ol.interaction.MeasureTool.prototype.formatData = function (geom) {
         }
       } else {
         output = geom.getArea()
+      }
+    } else if (this.measureType === 'measureCircle') {
+      let sourceProj = this.getMap().getView().getProjection()
+      let circle = /** @type {ol.geom.Polygon} */(geom.clone().transform(
+        sourceProj, 'EPSG:4326'))
+      let polygon = ol.geom.Polygon.fromCircle(circle, 64, 0)
+      if (this.isGeodesic) {
+        let coordinates = polygon.getLinearRing(0).getCoordinates()
+        let area = Math.abs(this.wgs84Sphere.geodesicArea(coordinates))
+        if (area > 10000000000) {
+          output = (Math.round(area / (1000 * 1000 * 10000) * 100) / 100) + ' ' + '万平方公里'
+        } else if (area > 1000000 && area < 10000000000) {
+          output = (Math.round(area / (1000 * 1000) * 100) / 100) + ' ' + '平方公里'
+        } else {
+          output = (Math.round(area * 100) / 100) + ' ' + '平方米'
+        }
+      } else {
+        output = polygon.getArea()
       }
     }
   }

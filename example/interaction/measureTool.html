@@ -29,6 +29,7 @@
 <div class="tool">
   <button class="btn btn-success" onclick="measureLength()">测量距离</button>
   <button class="btn btn-success" onclick="measureArea()">测量面积</button>
+  <button class="btn btn-success" onclick="measureCircle()">测量圆面积</button>
   <button class="btn btn-success" onclick="clearer()">移除测量</button>
 </div>
 <div class="map" id="map"></div>
@@ -57,6 +58,10 @@
 
   function measureArea () {
     measureTool.setTool(true, 'measureArea')
+  }
+
+  function measureCircle () {
+    measureTool.setTool(true, 'measureCircle')
   }
 
   function clearer () {
