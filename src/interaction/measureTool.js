@@ -60,7 +60,7 @@ ol.interaction.MeasureTool = function (params) {
    * 工具是否激活
    * @type {boolean}
    */
-  this.isActive = false
+  this.isActive_ = false
 
   /**
    * 点击计数器
@@ -159,7 +159,7 @@ ol.inherits(ol.interaction.MeasureTool, ol.interaction.Pointer)
  * @param mapBrowserEvent
  */
 ol.interaction.MeasureTool.handleMoveEvent_ = function (mapBrowserEvent) {
-  if (this.getActive()) {
+  if (this.getTool()) {
     if (!this.clickCount) {
       this.beforeDrawPointClickHandler(mapBrowserEvent)
     } else {
@@ -172,7 +172,7 @@ ol.interaction.MeasureTool.handleMoveEvent_ = function (mapBrowserEvent) {
  * addDrawInteractions
  * @param type
  */
-ol.interaction.MeasureTool.prototype.addDrawInteractions = function (type) {
+ol.interaction.MeasureTool.prototype.addDrawInteractions_ = function (type) {
   let style_ = new olStyleFactory(this.drawStyle)
   this.draw = new ol.interaction.Draw({
     type: type,
@@ -182,7 +182,9 @@ ol.interaction.MeasureTool.prototype.addDrawInteractions = function (type) {
   this.getMap().addInteraction(this.draw)
   this.draw.on('drawstart', this.drawStartHandle_, this)
   this.draw.on('drawend', this.drawEndHandle_, this)
-  this.getMap().on('singleclick', this.drawClickHandle_, this)
+  if (type === 'LineString') {
+    this.getMap().on('singleclick', this.drawClickHandle_, this)
+  }
 }
 
 /**
@@ -244,10 +246,15 @@ ol.interaction.MeasureTool.prototype.drawEndHandle_ = function (event) {
   feature.set('uuid', this.draw.get('uuid'))
   this.layer.getSource().addFeature(feature)
   let coordinates = feature.getGeometry().getLastCoordinate()
-  this.addMeasurecircle(coordinates)
-  this.addMeasureOverlay(coordinates, this.draw.get('measureResult'), '止点')
+  if (this.measureTypes.measureLength['name'] === this.measureType) {
+    this.addMeasurecircle(coordinates)
+    this.addMeasureOverlay(coordinates, this.draw.get('measureResult'), '止点')
+  } else {
+    let center = ol.extent.getCenter(feature.getGeometry().getExtent())
+    this.addMeasureOverlay(center, this.draw.get('measureResult'), '测面结果')
+  }
   this.addMeasureRemoveButton(coordinates)
-  this.setActive(false)
+  this.setTool(false)
   this.dispatchEvent('measureEnd')
 }
 
@@ -257,7 +264,7 @@ ol.interaction.MeasureTool.prototype.drawEndHandle_ = function (event) {
  */
 ol.interaction.MeasureTool.prototype.beforeDrawPointClickHandler = function (event) {
   if (event.dragging) return
-  if (!this.measureHelpTooltip && this.getActive()) {
+  if (!this.measureHelpTooltip && this.getTool()) {
     let helpTooltipElement = document.createElement('span')
     if (this.measureTypes.measureLength['name'] === this.measureType) {
       helpTooltipElement.className = 'hamp-js-measure hamp-js-measure-length'
@@ -322,14 +329,14 @@ ol.interaction.MeasureTool.prototype.addMeasureOverlay = function (coordinate, l
       offset: [10, 10],
       positioning: 'top-left'
     })
-  } else {
+  } else if (type === '测面结果') {
     measureResult.className = 'hmap-measure-overlay-label'
     measureResult.innerHTML = '<span class="measure-label">' + length + '</span>'
     measureOverlay = new ol.Overlay({
       element: measureResult,
       position: coordinate,
-      offset: [10, 0],
-      positioning: 'center-left'
+      offset: [0, 0],
+      positioning: 'center-center'
     })
   }
   measureOverlay.set('layerName', this.layerName)
@@ -343,12 +350,14 @@ ol.interaction.MeasureTool.prototype.addMeasureOverlay = function (coordinate, l
  * @param coordinate
  */
 ol.interaction.MeasureTool.prototype.addMeasureRemoveButton = function (coordinate) {
+  let that = this
   let imageButton = document.createElement('img')
   imageButton.src = (this.options['removeButtonSrc'] ? this.options['removeButtonSrc'] : 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyJpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMy1jMDExIDY2LjE0NTY2MSwgMjAxMi8wMi8wNi0xNDo1NjoyNyAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNiAoV2luZG93cykiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6NEYzMzc1RDY3RDU1MTFFNUFDNDJFNjQ4NUUwMzRDRDYiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6NEYzMzc1RDc3RDU1MTFFNUFDNDJFNjQ4NUUwMzRDRDYiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDo0RjMzNzVENDdENTUxMUU1QUM0MkU2NDg1RTAzNENENiIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDo0RjMzNzVENTdENTUxMUU1QUM0MkU2NDg1RTAzNENENiIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PsDx84AAAAC3SURBVHjavJIxDoMwDEV/ok5wDCbu0DvAdUBIwMLFSs/AxDXY6tZ2SCGVUikd+ifn20+2k5hHVd0AXJGmGQw+UyWMxY8KQGpbUNcB23aYHIsnuSgIy8dlAQ2DgwWSmD0YE5ReAq5pQOMIrKsDRByjKGC/dsxz2L7XQgU8JB7n4qDoY6SYF4J+p72T7/zeOXqr03SMx8XnsTUX7UgElKVCyDK3s8Tsae6sv/8ceceZ6jr1k99fAgwAsZy0Sa2HgDcAAAAASUVORK5CYII=')
   imageButton.style.cursor = 'pointer'
   imageButton.title = '清除测量结果'
-  imageButton.onclick = event => {
-    this.removeMeasure_(this.draw.get('uuid'))
+  imageButton.uuid_ = this.draw.get('uuid')
+  imageButton.onclick = function (event) {
+    that.removeMeasure_(this.uuid_)
   }
   let closeBtn = new ol.Overlay({
     element: imageButton,
@@ -395,18 +404,29 @@ ol.interaction.MeasureTool.prototype.removeMeasure_ = function (uuid) {
  * @param active
  * @param key
  */
-ol.interaction.MeasureTool.prototype.setActive = function (active, key) {
-  if (active && key && this.measureTypes.hasOwnProperty(key) && !this.layer) {
-    this.isActive = active
+ol.interaction.MeasureTool.prototype.setTool = function (active, key) {
+  this.removeLastInteraction_()
+  if (active && key && this.measureTypes.hasOwnProperty(key)) {
+    this.isActive_ = active
     this.measureType = key
-    let _style = new olStyleFactory(this.finshStyle)
-    this.layer = new olLayerLayerUtils(this.getMap()).createVectorLayer(this.layerName, {
-      create: true
-    })
-    this.layer.setStyle(_style)
-    this.addDrawInteractions(this.measureTypes[key]['type'])
-  } else {
-    this.isActive = false
+    if (!this.layer) {
+      let _style = new olStyleFactory(this.finshStyle)
+      this.layer = new olLayerLayerUtils(this.getMap()).createVectorLayer(this.layerName, {
+        create: true
+      })
+      this.layer.setStyle(_style)
+    }
+    this.addDrawInteractions_(this.measureTypes[key]['type'])
+  }
+}
+
+/**
+ * 移除上一次激活的工具
+ * @private
+ */
+ol.interaction.MeasureTool.prototype.removeLastInteraction_ = function () {
+  this.isActive_ = false
+  if (this.draw) {
     this.draw.un('drawstart', this.drawStartHandle_, this)
     this.draw.un('drawend', this.drawEndHandle_, this)
     this.getMap().un('singleclick', this.drawClickHandle_, this)
@@ -422,11 +442,15 @@ ol.interaction.MeasureTool.prototype.setActive = function (active, key) {
 }
 
 /**
- * getActive
+ * getTool
  * @returns {boolean|*}
  */
-ol.interaction.MeasureTool.prototype.getActive = function () {
-  return this.isActive
+ol.interaction.MeasureTool.prototype.getTool = function () {
+  return this.isActive_
+}
+
+ol.interaction.MeasureTool.prototype.setActive = function (active) {
+  ol.interaction.Pointer.prototype.setActive.call(this, active)
 }
 
 /**

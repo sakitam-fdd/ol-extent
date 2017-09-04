@@ -27,7 +27,8 @@
 </head>
 <body>
 <div class="tool">
-  <button class="btn btn-success" onclick="measure()">测量</button>
+  <button class="btn btn-success" onclick="measureLength()">测量距离</button>
+  <button class="btn btn-success" onclick="measureArea()">测量面积</button>
   <button class="btn btn-success" onclick="clearer()">移除测量</button>
 </div>
 <div class="map" id="map"></div>
@@ -50,13 +51,16 @@
   });
   var measureTool = new ol.interaction.MeasureTool()
   map.addInteraction(measureTool)
-  function measure () {
-    measureTool.setActive(true, 'measureLength')
+  function measureLength () {
+    measureTool.setTool(true, 'measureLength')
+  }
+
+  function measureArea () {
+    measureTool.setTool(true, 'measureArea')
   }
 
   function clearer () {
-    measureTool.setActive(false)
-    map.removeInteraction(measureTool)
+    measureTool.setTool(false)
   }
 </script>
 </body>
