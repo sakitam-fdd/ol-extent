@@ -37,6 +37,12 @@ ol.interaction.MeasureTool = function (params) {
   this.measureType = ''
 
   /**
+   * 自由画笔
+   * @type {boolean}
+   */
+  this.freehand = false
+
+  /**
    * 是否使用地理测量方式
    * @type {boolean}
    */
@@ -146,7 +152,8 @@ ol.interaction.MeasureTool = function (params) {
    */
   this.previousCursor_ = undefined
   ol.interaction.Pointer.call(this, {
-    handleMoveEvent: ol.interaction.MeasureTool.handleMoveEvent_
+    handleMoveEvent: ol.interaction.MeasureTool.handleMoveEvent_,
+    handleDownEvent: ol.interaction.MeasureTool.handleDownEvent_
   })
 
   /**
@@ -173,6 +180,17 @@ ol.interaction.MeasureTool.handleMoveEvent_ = function (mapBrowserEvent) {
 }
 
 /**
+ * 鼠标按下事件
+ * @param mapBrowserEvent
+ * @private
+ */
+ol.interaction.MeasureTool.handleDownEvent_ = function (mapBrowserEvent) {
+  if (this.freehand) {
+    console.log(mapBrowserEvent)
+  }
+}
+
+/**
  * addDrawInteractions
  * @param type
  */
@@ -180,13 +198,14 @@ ol.interaction.MeasureTool.prototype.addDrawInteractions_ = function (type) {
   let style_ = new olStyleFactory(this.drawStyle)
   this.draw = new ol.interaction.Draw({
     type: type,
-    style: style_
+    style: style_,
+    freehand: this.freehand
   })
   this.draw.set('uuid', getuuid())
   this.getMap().addInteraction(this.draw)
   this.draw.on('drawstart', this.drawStartHandle_, this)
   this.draw.on('drawend', this.drawEndHandle_, this)
-  if (type === 'LineString') {
+  if (type === 'LineString' && !this.freehand) {
     this.getMap().on('singleclick', this.drawClickHandle_, this)
   }
 }
@@ -278,10 +297,25 @@ ol.interaction.MeasureTool.prototype.beforeDrawPointClickHandler = function (eve
     let helpTooltipElement = document.createElement('span')
     if (this.measureTypes.measureLength['name'] === this.measureType) {
       helpTooltipElement.className = 'hamp-js-measure hamp-js-measure-length'
-      helpTooltipElement.innerHTML = '单击开始测距'
-    } else {
+      if (this.freehand) {
+        helpTooltipElement.innerHTML = '按下鼠标拖拽开始测量'
+      } else {
+        helpTooltipElement.innerHTML = '单击开始测距'
+      }
+    } else if (this.measureTypes.measureArea['name'] === this.measureType) {
       helpTooltipElement.className = 'hamp-js-measure hamp-js-measure-area'
-      helpTooltipElement.innerHTML = '单击开始测面'
+      if (this.freehand) {
+        helpTooltipElement.innerHTML = '按下鼠标拖拽开始测量'
+      } else {
+        helpTooltipElement.innerHTML = '单击开始测面'
+      }
+    } else if (this.measureTypes.measureCircle['name'] === this.measureType) {
+      helpTooltipElement.className = 'hamp-js-measure hamp-js-measure-area'
+      if (this.freehand) {
+        helpTooltipElement.innerHTML = '按下鼠标拖拽开始测量'
+      } else {
+        helpTooltipElement.innerHTML = '单击开始测方圆面积'
+      }
     }
     this.measureHelpTooltip = new ol.Overlay({
       element: helpTooltipElement,
@@ -310,6 +344,13 @@ ol.interaction.MeasureTool.prototype.afterDrawPointClickHandler = function (even
       '</span><br>' +
       '<span class="tool-tip">单击确定地点，双击结束</span>'
   } else if (this.measureTypes.measureArea['name'] === this.measureType) {
+    helpTooltipElement.className = 'hamp-js-measure-move hamp-js-measure-area'
+    let area = this.draw.get('measureResult')
+    helpTooltipElement.innerHTML = '<span>总面积：' +
+      '<span class="measure-result">' + area + '</span>' +
+      '</span><br>' +
+      '<span class="tool-tip">单击确定地点，双击结束</span>'
+  } else if (this.measureTypes.measureCircle['name'] === this.measureType) {
     helpTooltipElement.className = 'hamp-js-measure-move hamp-js-measure-area'
     let area = this.draw.get('measureResult')
     helpTooltipElement.innerHTML = '<span>总面积：' +
@@ -431,11 +472,13 @@ ol.interaction.MeasureTool.prototype.removeMeasure_ = function (uuid) {
  * 激活测量工具
  * @param active
  * @param key
+ * @param freehand
  */
-ol.interaction.MeasureTool.prototype.setTool = function (active, key) {
+ol.interaction.MeasureTool.prototype.setTool = function (active, key, freehand) {
   this.removeLastInteraction_()
   if (active && key && this.measureTypes.hasOwnProperty(key)) {
     this.isActive_ = active
+    this.freehand = freehand
     this.measureType = key
     if (!this.layer) {
       let _style = new olStyleFactory(this.finshStyle)
@@ -454,6 +497,7 @@ ol.interaction.MeasureTool.prototype.setTool = function (active, key) {
  */
 ol.interaction.MeasureTool.prototype.removeLastInteraction_ = function () {
   this.isActive_ = false
+  this.freehand = false
   if (this.draw) {
     this.draw.un('drawstart', this.drawStartHandle_, this)
     this.draw.un('drawend', this.drawEndHandle_, this)

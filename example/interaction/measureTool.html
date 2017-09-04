@@ -53,11 +53,11 @@
   var measureTool = new ol.interaction.MeasureTool()
   map.addInteraction(measureTool)
   function measureLength () {
-    measureTool.setTool(true, 'measureLength')
+    measureTool.setTool(true, 'measureLength', true)
   }
 
   function measureArea () {
-    measureTool.setTool(true, 'measureArea')
+    measureTool.setTool(true, 'measureArea', true)
   }
 
   function measureCircle () {
