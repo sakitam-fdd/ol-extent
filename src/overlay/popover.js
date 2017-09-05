@@ -3,7 +3,7 @@
  * @desc 用于地图弹出气泡
  */
 import '../scss/popover.scss'
-import DomUtils from 'nature-dom-util'
+import * as DomUtils from 'nature-dom-util/src/utils/domUtils'
 import {getuuid} from '../utils/utils'
 ol.Popover = function (map, params) {
   if (map && map instanceof ol.Map) {
@@ -80,11 +80,11 @@ ol.Popover = function (map, params) {
   }
 
   let size = this.map.getSize()
-  this.container = DomUtils.htmlUtils.create('div', this.options['className'])
-  this.content = DomUtils.htmlUtils.create('div', 'hmap-js-popup-content', this.container)
+  this.container = DomUtils.create('div', this.options['className'])
+  this.content = DomUtils.create('div', 'hmap-js-popup-content', this.container)
   this.content.style.maxHeight = size[1] - 20 + 'px'
   if (this.options['showCloser'] !== false) {
-    this.closer = DomUtils.htmlUtils.create('div', 'hmap-js-popup-closer', this.container)
+    this.closer = DomUtils.create('div', 'hmap-js-popup-closer', this.container)
     this.closer.innerHTML = '+'
     this.closer.addEventListener('click', (event) => {
       let e = !event ? window.event : event
@@ -98,7 +98,7 @@ ol.Popover = function (map, params) {
     })
   }
   if (this.options['showMinimize'] !== false) {
-    this.minimize = DomUtils.htmlUtils.create('div', 'hmap-js-popup-minimize', this.container)
+    this.minimize = DomUtils.create('div', 'hmap-js-popup-minimize', this.container)
     this.minimize.innerHTML = '_'
     this.minimize.addEventListener('click', (event) => {
       let e = !event ? window.event : event
@@ -293,7 +293,7 @@ ol.Popover.prototype.showMinimize = function () {
   let that = this
   if (this.options['showMarkFeature']) {
     if (!this.miniOverLay) {
-      let element = DomUtils.htmlUtils.create('span', 'hmap-marker-minimize-panel')
+      let element = DomUtils.create('span', 'hmap-marker-minimize-panel')
       element.setAttribute('data-state', 'block')
       that.container.style.display = 'none'
       let eventListener = (event) => {
@@ -305,7 +305,7 @@ ol.Popover.prototype.showMinimize = function () {
       }
       element.removeEventListener('click', eventListener)
       element.addEventListener('click', eventListener)
-      let label = DomUtils.htmlUtils.create('label', 'hmap-marker-minimize-label', element)
+      let label = DomUtils.create('label', 'hmap-marker-minimize-label', element)
       if (this.options['minimizeText']) {
         label.innerText = this.options['minimizeText']
         label.setAttribute('title', this.options['minimizeText'])

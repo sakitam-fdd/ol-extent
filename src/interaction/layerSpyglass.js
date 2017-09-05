@@ -3,7 +3,7 @@
  * @desc 图层滤镜
  */
 
-import DomUtils from 'nature-dom-util/dist/DomUtils'
+import * as Events from 'nature-dom-util/src/events/Events'
 ol.interaction.LayerSpyglass = function (params) {
   this.options = params || {}
   if (this.options['spyLayer']) {
@@ -96,8 +96,8 @@ ol.interaction.LayerSpyglass.handleEvent_ = function (evt) {
  */
 ol.interaction.LayerSpyglass.prototype.initEvents_ = function () {
   if (this.getMap()) {
-    DomUtils.Events.listen(this.getMap().getTargetElement(), 'mouseout', this.handleMouseOut_, this)
-    DomUtils.Events.listen(document, 'keydown', this.handleKeyDown_, this)
+    Events.listen(this.getMap().getTargetElement(), 'mouseout', this.handleMouseOut_, this)
+    Events.listen(document, 'keydown', this.handleKeyDown_, this)
     let layers = this.getMap().getLayers().getArray()
     let layerIndexs = []
     this._currentLayerIndex = this.spyLayer.getZIndex()
@@ -182,8 +182,8 @@ ol.interaction.LayerSpyglass.prototype.setMap = function (map) {
     ol.interaction.Interaction.prototype.setMap.call(this, map)
     this.initEvents_()
   } else {
-    DomUtils.Events.unListen(this.getMap().getTargetElement(), 'mouseout', this.handleMouseOut_, this)
-    DomUtils.Events.unListen(document, 'keydown', this.handleKeyDown_, this)
+    Events.unListen(this.getMap().getTargetElement(), 'mouseout', this.handleMouseOut_, this)
+    Events.unListen(document, 'keydown', this.handleKeyDown_, this)
     // before rendering the layer, do some clipping
     this.spyLayer.un('precompose', this.handlePrecompose_, this)
     // after rendering the layer, restore the canvas context
