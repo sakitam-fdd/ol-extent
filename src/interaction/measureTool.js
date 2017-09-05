@@ -153,7 +153,8 @@ ol.interaction.MeasureTool = function (params) {
   this.previousCursor_ = undefined
   ol.interaction.Pointer.call(this, {
     handleMoveEvent: ol.interaction.MeasureTool.handleMoveEvent_,
-    handleDownEvent: ol.interaction.MeasureTool.handleDownEvent_
+    handleDownEvent: ol.interaction.MeasureTool.handleDownEvent_,
+    handleDragEvent: ol.interaction.MeasureTool.handleDragEvent_
   })
 
   /**
@@ -171,10 +172,15 @@ ol.inherits(ol.interaction.MeasureTool, ol.interaction.Pointer)
  */
 ol.interaction.MeasureTool.handleMoveEvent_ = function (mapBrowserEvent) {
   if (this.getTool()) {
-    if (!this.clickCount) {
-      this.beforeDrawPointClickHandler(mapBrowserEvent)
-    } else {
+    if (this.drawStart_ && !mapBrowserEvent.dragging &&
+       this.measureType === this.measureTypes.measureCircle['name']) {
       this.afterDrawPointClickHandler(mapBrowserEvent)
+    } else if (!this.drawStart_ && !mapBrowserEvent.dragging) {
+      this.beforeDrawPointClickHandler(mapBrowserEvent)
+    } else if (this.drawStart_ && !mapBrowserEvent.dragging) {
+      this.afterDrawPointClickHandler(mapBrowserEvent)
+    } else if (this.freehand && this.drawStart_ && mapBrowserEvent.dragging) {
+      this.afterDragHandler_(mapBrowserEvent)
     }
   }
 }
@@ -185,6 +191,17 @@ ol.interaction.MeasureTool.handleMoveEvent_ = function (mapBrowserEvent) {
  * @private
  */
 ol.interaction.MeasureTool.handleDownEvent_ = function (mapBrowserEvent) {
+  if (this.freehand) {
+    console.log(mapBrowserEvent)
+  }
+}
+
+/**
+ * 处理拖拽事件
+ * @param mapBrowserEvent
+ * @private
+ */
+ol.interaction.MeasureTool.handleDragEvent_ = function (mapBrowserEvent) {
   if (this.freehand) {
     console.log(mapBrowserEvent)
   }
@@ -292,7 +309,6 @@ ol.interaction.MeasureTool.prototype.drawEndHandle_ = function (event) {
  * @param event
  */
 ol.interaction.MeasureTool.prototype.beforeDrawPointClickHandler = function (event) {
-  if (event.dragging) return
   if (!this.measureHelpTooltip && this.getTool()) {
     let helpTooltipElement = document.createElement('span')
     if (this.measureTypes.measureLength['name'] === this.measureType) {
@@ -334,7 +350,6 @@ ol.interaction.MeasureTool.prototype.beforeDrawPointClickHandler = function (eve
  * @param event
  */
 ol.interaction.MeasureTool.prototype.afterDrawPointClickHandler = function (event) {
-  if (event.dragging) return
   let helpTooltipElement = this.measureHelpTooltip.getElement()
   if (this.measureTypes.measureLength['name'] === this.measureType) {
     helpTooltipElement.className = 'hamp-js-measure-move hamp-js-measure-length'
@@ -363,6 +378,39 @@ ol.interaction.MeasureTool.prototype.afterDrawPointClickHandler = function (even
 }
 
 /**
+ * 自由测量时拖拽事件
+ * @param event
+ * @private
+ */
+ol.interaction.MeasureTool.prototype.afterDragHandler_ = function (event) {
+  let helpTooltipElement = this.measureHelpTooltip.getElement()
+  if (this.measureTypes.measureLength['name'] === this.measureType) {
+    helpTooltipElement.className = 'hamp-js-measure-move hamp-js-measure-length'
+    let length = this.draw.get('measureResult')
+    helpTooltipElement.innerHTML = '<span>总长：' +
+      '<span class="measure-result">' + length + '</span>' +
+      '</span><br>' +
+      '<span class="tool-tip">松开鼠标按键结束测量</span>'
+  } else if (this.measureTypes.measureArea['name'] === this.measureType) {
+    helpTooltipElement.className = 'hamp-js-measure-move hamp-js-measure-area'
+    let area = this.draw.get('measureResult')
+    helpTooltipElement.innerHTML = '<span>总面积：' +
+      '<span class="measure-result">' + area + '</span>' +
+      '</span><br>' +
+      '<span class="tool-tip">松开鼠标按键结束测量</span>'
+  } else if (this.measureTypes.measureCircle['name'] === this.measureType) {
+    helpTooltipElement.className = 'hamp-js-measure-move hamp-js-measure-area'
+    let area = this.draw.get('measureResult')
+    helpTooltipElement.innerHTML = '<span>总面积：' +
+      '<span class="measure-result">' + area + '</span>' +
+      '</span><br>' +
+      '<span class="tool-tip">松开鼠标按键结束测量</span>'
+  }
+  this.measureHelpTooltip.setPosition(event.coordinate)
+  this.getMap().render()
+}
+
+/**
  * 添加测量结果overlay
  * @param coordinate
  * @param length
@@ -381,21 +429,19 @@ ol.interaction.MeasureTool.prototype.addMeasureOverlay = function (coordinate, l
       positioning: 'top-left'
     })
   } else if (type === 'area') {
-    measureResult.className = 'hmap-measure-overlay-label'
+    measureResult.className = 'hmap-measure-area-overlay-label'
     measureResult.innerHTML = '<span class="measure-label">' + length + '</span>'
     measureOverlay = new ol.Overlay({
       element: measureResult,
       position: coordinate,
-      offset: [0, 0],
       positioning: 'center-center'
     })
   } else if (type === 'circle') {
-    measureResult.className = 'hmap-measure-overlay-label'
+    measureResult.className = 'hmap-measure-area-overlay-label'
     measureResult.innerHTML = '<span class="measure-label">' + length + '</span>'
     measureOverlay = new ol.Overlay({
       element: measureResult,
       position: coordinate,
-      offset: [0, 0],
       positioning: 'center-center'
     })
   } else {
@@ -498,6 +544,7 @@ ol.interaction.MeasureTool.prototype.setTool = function (active, key, freehand) 
 ol.interaction.MeasureTool.prototype.removeLastInteraction_ = function () {
   this.isActive_ = false
   this.freehand = false
+  this.drawStart_ = false
   if (this.draw) {
     this.draw.un('drawstart', this.drawStartHandle_, this)
     this.draw.un('drawend', this.drawEndHandle_, this)
