@@ -11,6 +11,7 @@
     "olInteractionLayerMagnify": "src/interaction/layerMagnify.js",
     "olInteractionLayerSpyglass": "src/interaction/layerSpyglass.js",
     "olInteractionMeasureTool": "src/interaction/measureTool.js",
+    "olInteractionFreeHandCircle": "src/interaction/freeHandCircle.js",
     "olStyleFactory": "src/style/factory.js",
     "olPopover": "src/overlay/popover.js",
     "olSourceBaidu": "src/source/Baidu.js",
