@@ -5,7 +5,9 @@
 import '../scss/freeHandCircle.scss'
 import olStyleFactory from '../style/factory'
 import olLayerLayerUtils from '../layer/layerUtils'
+import Observable from 'observable-emit'
 import {getuuid} from '../utils/utils'
+import mixin from '../utils/mixin'
 ol.interaction.FreeHandCircle = function (params) {
   this.options = params || {}
 
@@ -45,6 +47,18 @@ ol.interaction.FreeHandCircle = function (params) {
    * @private
    */
   this.center_ = []
+
+  /**
+   * 当前鼠标是否按下
+   * @type {boolean}
+   */
+  this.isMouseDown = false
+
+  /**
+   * 是否为拖拽状态
+   * @type {boolean}
+   */
+  this.isDraging = false
 
   /**
    * cursor
@@ -141,9 +155,12 @@ ol.interaction.FreeHandCircle = function (params) {
     handleUpEvent: ol.interaction.FreeHandCircle.handleUpEvent_,
     handleDragEvent: ol.interaction.FreeHandCircle.handleDragEvent_
   })
+
+  Observable.call(this)
 }
 
 ol.inherits(ol.interaction.FreeHandCircle, ol.interaction.Pointer)
+mixin(ol.interaction.FreeHandCircle, Observable)
 
 /**
  * 处理移动事件
@@ -174,6 +191,7 @@ ol.interaction.FreeHandCircle.handleMoveEvent_ = function (mapBrowserEvent) {
  * @private
  */
 ol.interaction.FreeHandCircle.handleDownEvent_ = function (mapBrowserEvent) {
+  this.isMouseDown = true
   if (!this.drawStart_ && mapBrowserEvent.originalEvent.button === 0) {
     let map = mapBrowserEvent.map
     let feature = map.forEachFeatureAtPixel(mapBrowserEvent.pixel, function (feature) {
@@ -193,8 +211,13 @@ ol.interaction.FreeHandCircle.handleDownEvent_ = function (mapBrowserEvent) {
  * @private
  */
 ol.interaction.FreeHandCircle.handleUpEvent_ = function (mapBrowserEvent) {
+  if (this.feature_ && this.coordinate_ && this.isDraging) {
+    this.dispatch('onchangeend', this.circleFeature.getGeometry())
+  }
   this.coordinate_ = null
   this.feature_ = null
+  this.isMouseDown = false
+  this.isDraging = false
   return false
 }
 
@@ -204,9 +227,10 @@ ol.interaction.FreeHandCircle.handleUpEvent_ = function (mapBrowserEvent) {
  * @private
  */
 ol.interaction.FreeHandCircle.handleDragEvent_ = function (mapBrowserEvent) {
-  if (!this.coordinate_) {
+  if (!this.coordinate_ || !this.feature_) {
     return
   }
+  this.isDraging = true
   let deltaX = mapBrowserEvent.coordinate[0] - this.coordinate_[0]
   let deltaY = 0
   let geometry = /** @type {ol.geom.SimpleGeometry} */
@@ -260,7 +284,6 @@ ol.interaction.FreeHandCircle.prototype.drawStartHandle_ = function (event) {
  * @private
  */
 ol.interaction.FreeHandCircle.prototype.drawEndHandle_ = function (event) {
-  this.drawStart_ = false
   if (event && event.feature) {
     let geom_ = event.feature.getGeometry()
     this.center_ = geom_.getCenter()
@@ -269,6 +292,7 @@ ol.interaction.FreeHandCircle.prototype.drawEndHandle_ = function (event) {
     this.createCircle(this.center_, this.radius)
   }
   this.removeLastInteraction_()
+  this.drawStart_ = false
 }
 
 /**
@@ -301,6 +325,9 @@ ol.interaction.FreeHandCircle.prototype.createCircle = function (center, radius)
       this.addLabelFeature_(this.center_, 'center')
       this.addLabelFeature_(coordinates, 'endLabel')
       this.drawTextLabel_(this.radius + ' m', coordinates)
+      if (this.drawStart_ || !this.isMouseDown) {
+        this.dispatch('onchangeend', geom)
+      }
     })
     this.circleFeature.getGeometry().dispatchEvent('change')
   } else {
@@ -503,6 +530,8 @@ ol.interaction.FreeHandCircle.prototype.destroy = function () {
   this.drawStart_ = false
   this.center_ = []
   this.radius = ''
+  this.isDraging = false
+  this.isMouseDown = false
 }
 
 let olInteractionFreeHandCircle = ol.interaction.FreeHandCircle

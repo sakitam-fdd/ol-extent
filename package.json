@@ -49,7 +49,9 @@
     "clone-deep": "^1.0.0",
     "file-saver": "^1.3.3",
     "jspdf": "^1.3.3",
+    "core-js": "^2.4.1",
     "nature-dom-util": "^1.1.0",
+    "observable-emit": "^1.0.1",
     "openlayers": "^4.3.1",
     "pepjs": "^0.4.3"
   },
@@ -74,7 +76,6 @@
     "http-proxy-middleware": "^0.17.4",
     "compression-webpack-plugin": "^0.4.0",
     "copy-webpack-plugin": "^4.0.1",
-    "core-js": "^2.4.1",
     "css-loader": "^0.28.4",
     "eslint": "^3.19.0",
     "eslint-config-standard": "^6.2.1",

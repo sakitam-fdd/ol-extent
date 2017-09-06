@@ -39,7 +39,7 @@ const checkBrowser = () => {
  * @returns {*|string|!Array.<T>}
  */
 const getuuid = () => {
-  let [ s, hexDigits ] = [ [], '0123456789abcdef' ]
+  let [s, hexDigits] = [[], '0123456789abcdef']
   for (let i = 0; i < 36; i++) {
     s[i] = hexDigits.substr(Math.floor(Math.random() * 0x10), 1)
   }
