@@ -48,7 +48,7 @@ if (config.build.productionGzip) { // Gzip压缩
         config.build.productionGzipExtensions.join('|') +
         ')$'
       ),
-      threshold: 10240,
+      threshold: 0,
       minRatio: 0.8
     })
   )

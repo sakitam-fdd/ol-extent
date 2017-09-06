@@ -212,7 +212,7 @@ ol.interaction.FreeHandCircle.handleDownEvent_ = function (mapBrowserEvent) {
  */
 ol.interaction.FreeHandCircle.handleUpEvent_ = function (mapBrowserEvent) {
   if (this.feature_ && this.coordinate_ && this.isDraging) {
-    this.dispatch('onchangeend', this.circleFeature.getGeometry())
+    this.dispatch('changeend', this.circleFeature.getGeometry())
   }
   this.coordinate_ = null
   this.feature_ = null
@@ -325,8 +325,8 @@ ol.interaction.FreeHandCircle.prototype.createCircle = function (center, radius)
       this.addLabelFeature_(this.center_, 'center')
       this.addLabelFeature_(coordinates, 'endLabel')
       this.drawTextLabel_(this.radius + ' m', coordinates)
-      if (this.drawStart_ || !this.isMouseDown) {
-        this.dispatch('onchangeend', geom)
+      if (this.drawStart_ || !(this.isMouseDown && this.isDraging)) {
+        this.dispatch('changeend', geom)
       }
     })
     this.circleFeature.getGeometry().dispatchEvent('change')

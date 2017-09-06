@@ -16,14 +16,55 @@ ol.layer.LayerUtils.prototype.getLayerByLayerName = function (layerName) {
     let targetLayer = null
     if (this.map) {
       let layers = this.map.getLayers().getArray()
-      layers.every(layer => {
-        if (layer.get('layerName') === layerName) {
-          targetLayer = layer
+      targetLayer = this.getLayerInternal(layers, 'layerName', layerName)
+    }
+    return targetLayer
+  } catch (e) {
+    console.log(e)
+  }
+}
+
+/**
+ * 内部处理获取图层方法
+ * @param layers
+ * @param key
+ * @param layerName
+ * @returns {*}
+ */
+ol.layer.LayerUtils.prototype.getLayerInternal = function (layers, key, layerName) {
+  let _target = null
+  if (layers.length > 0) {
+    layers.every(layer => {
+      if (layer instanceof ol.layer.Group) {
+        let layers = layer.getLayers().getArray()
+        _target = this.getLayerInternal(layers, layerName)
+        if (_target) {
           return false
         } else {
           return true
         }
-      })
+      } else if (layer.get(key) === layerName) {
+        _target = layer
+        return false
+      } else {
+        return true
+      }
+    })
+  }
+  return _target
+}
+
+/**
+ * 通过键名键值获取图层（注意键名键值必须是set(key, value)）
+ * @param key
+ * @param value
+ */
+ol.layer.LayerUtils.prototype.getLayerByKeyValue = function (key, value) {
+  try {
+    let targetLayer = null
+    if (this.map) {
+      let layers = this.map.getLayers().getArray()
+      targetLayer = this.getLayerInternal(layers, key, value)
     }
     return targetLayer
   } catch (e) {

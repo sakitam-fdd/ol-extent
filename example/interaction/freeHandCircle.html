@@ -52,7 +52,7 @@
   });
   var freeHandCircle = new ol.interaction.FreeHandCircle()
   map.addInteraction(freeHandCircle)
-  freeHandCircle.on('onchangeend', function (event) {
+  freeHandCircle.on('changeend', function (event) {
     console.log(event)
   })
   function activeTool () {
