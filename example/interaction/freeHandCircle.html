@@ -53,20 +53,20 @@
   var freeHandCircle = new ol.interaction.FreeHandCircle()
   map.addInteraction(freeHandCircle)
   function activeTool () {
-    freeHandCircle.setActive(true)
+    freeHandCircle.initDrawInteraction()
   }
 
   function disActiveTool () {
-    freeHandCircle.setActive(false)
+    freeHandCircle.removeLastInteraction_()
   }
 
   function creatCircle () {
-    freeHandCircle.createCircle(params)
+    freeHandCircle.createCircle([0, 0], 181174)
   }
 
   function clearer () {
+    freeHandCircle.destroy()
     map.removeInteraction(freeHandCircle)
-    freeHandCircle.destroy(false)
   }
 </script>
 </body>
