@@ -3,13 +3,14 @@
     position: absolute;
     bottom: 15px;
     right: 15px;
+    padding: 8px;
+    background-color: rgba(255, 255, 255, 0.8);
     .hmap-layer-switcher-ul-inner {
       position: relative;
       list-style: none;
-      padding: 8px;
       overflow: hidden;
       margin: 0;
-      background-color: rgba(255, 255, 255, 0.8);
+      padding: 0;
       -webkit-transition-property: width, background-color;
       transition-property: width, background-color;
       -webkit-transition-duration: .4s;
@@ -40,6 +41,12 @@
           .layer-name {
             background-color: #3385FF;
           }
+        }
+      }
+      .selected-item {
+        border-color: #3385FF;
+        .layer-name {
+          background-color: #3385FF;
         }
       }
     }

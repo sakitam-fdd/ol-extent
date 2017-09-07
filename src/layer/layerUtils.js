@@ -28,26 +28,51 @@ ol.layer.LayerUtils.prototype.getLayerByLayerName = function (layerName) {
  * 内部处理获取图层方法
  * @param layers
  * @param key
- * @param layerName
+ * @param value
  * @returns {*}
  */
-ol.layer.LayerUtils.prototype.getLayerInternal = function (layers, key, layerName) {
+ol.layer.LayerUtils.prototype.getLayerInternal = function (layers, key, value) {
   let _target = null
   if (layers.length > 0) {
     layers.every(layer => {
       if (layer instanceof ol.layer.Group) {
         let layers = layer.getLayers().getArray()
-        _target = this.getLayerInternal(layers, layerName)
+        _target = this.getLayerInternal(layers, key, value)
         if (_target) {
           return false
         } else {
           return true
         }
-      } else if (layer.get(key) === layerName) {
+      } else if (layer.get(key) === value) {
         _target = layer
         return false
       } else {
         return true
+      }
+    })
+  }
+  return _target
+}
+
+/**
+ * 根据相关键值键名获取图层集合
+ * @param layers
+ * @param key
+ * @param value
+ * @returns {Array}
+ */
+ol.layer.LayerUtils.prototype.getLayersArrayInternal = function (layers, key, value) {
+  let _target = []
+  if (layers.length > 0) {
+    layers.forEach(layer => {
+      if (layer instanceof ol.layer.Group) {
+        let layers = layer.getLayers().getArray()
+        _target = this.getLayerInternal(layers, key, value)
+        if (_target) {
+          _target.push(layer)
+        }
+      } else if (layer.get(key) === value) {
+        _target.push(layer)
       }
     })
   }
@@ -67,6 +92,24 @@ ol.layer.LayerUtils.prototype.getLayerByKeyValue = function (key, value) {
       targetLayer = this.getLayerInternal(layers, key, value)
     }
     return targetLayer
+  } catch (e) {
+    console.log(e)
+  }
+}
+
+/**
+ * 通过键名键值获取图层集合（注意键名键值必须是set(key, value)）
+ * @param key
+ * @param value
+ */
+ol.layer.LayerUtils.prototype.getLayersArrayByKeyValue = function (key, value) {
+  try {
+    let targetLayers = []
+    if (this.map) {
+      let layers = this.map.getLayers().getArray()
+      targetLayers = this.getLayersArrayInternal(layers, key, value)
+    }
+    return targetLayers
   } catch (e) {
     console.log(e)
   }
