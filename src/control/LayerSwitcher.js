@@ -31,6 +31,13 @@ ol.control.LayerSwitcher = function (params = {}) {
   this.baseLayers_ = []
 
   /**
+   * 标注图层
+   * @type {Array}
+   * @private
+   */
+  this.labelLayers_ = []
+
+  /**
    * 用于标识底图的关键字
    * @type {string}
    */
@@ -41,6 +48,18 @@ ol.control.LayerSwitcher = function (params = {}) {
    * @type {string}
    */
   this.isDefaultKey = this.options['isDefaultKey'] ? this.options['isDefaultKey'] : 'isDefault'
+
+  /**
+   * 关联图层关键字
+   * @type {string}
+   */
+  this.labelAliasKey = this.options['labelAlias'] ? this.options['labelAlias'] : 'layerName'
+
+  /**
+   * 标准labelLayer关键字
+   * @type {string}
+   */
+  this.labelLayerKey = this.options['labelLayerKey'] ? this.options['labelLayerKey'] : 'isLabelLayerKey'
 
   /**
    * 是否已经默认执行选中操作
@@ -60,6 +79,9 @@ ol.control.LayerSwitcher = function (params = {}) {
    * @type {string}
    */
   this.options['key'] = (this.options['key'] ? this.options['key'] : 'layerName')
+  if (this.labelLayerKey === this.baseLayerKey) {
+    throw new Error('标注图层关键字不能和底图相同！')
+  }
 
   /**
    * @private
@@ -184,7 +206,19 @@ ol.control.LayerSwitcher.prototype.switcher = function (key, value) {
   if (this.baseLayers_.length <= 0) {
     this.baseLayers_ = this.getLayersArrayByKeyValue(this.baseLayerKey, true)
   }
+  if (this.labelLayers_.length <= 0) {
+    this.labelLayers_ = this.getLayersArrayByKeyValue(this.labelLayerKey, true)
+  }
   if (this.baseLayers_.length > 0 && this.baseLayers_.length === this.options['layers'].length) {
+    if (this.labelLayers_ && this.labelLayers_.length > 0) { // 处理标注层
+      this.labelLayers_.forEach(labelLayer => {
+        if (labelLayer && labelLayer.get(this.labelAliasKey) === value) {
+          labelLayer.setVisible(true)
+        } else {
+          labelLayer.setVisible(false)
+        }
+      })
+    }
     this.baseLayers_.forEach(layer => {
       if (layer && layer.get(key) === value) {
         layer.setVisible(true)
@@ -219,6 +253,7 @@ ol.control.LayerSwitcher.prototype.setMap = function (map) {
   this.map = map
   if (map && map instanceof ol.Map) {
     this.baseLayers_ = this.getLayersArrayByKeyValue(this.baseLayerKey, true)
+    this.labelLayers_ = this.getLayersArrayByKeyValue(this.labelLayerKey, true)
   }
 }
 
