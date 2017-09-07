@@ -9,6 +9,7 @@
     "olControlCompareLayer": "src/control/compareLayer.js",
     "olControlBZoomSlider": "src/control/BZoomSlider.js",
     "olControlLayerSwitcher": "src/control/LayerSwitcher.js",
+    "olControlContextMenu": "src/control/contextMenu.js",
     "olInteractionLayerMagnify": "src/interaction/layerMagnify.js",
     "olInteractionLayerSpyglass": "src/interaction/layerSpyglass.js",
     "olInteractionMeasureTool": "src/interaction/measureTool.js",
