@@ -2,7 +2,7 @@
  * Created by FDD on 2017/7/28.
  * @desc 用于图层比较
  */
-import '../scss/compareLayer'
+import '../asset/scss/compareLayer'
 import {BASE_CLASS_NAME} from '../constants'
 import * as htmlUtils from 'nature-dom-util/src/utils/domUtils'
 import * as Events from 'nature-dom-util/src/events/Events'

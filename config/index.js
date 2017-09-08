@@ -24,6 +24,6 @@ module.exports = {
     fileName: 'olExtent',
     libraryName: 'olExtent',
     distDirectory: path.resolve(__dirname, '../dist'),
-    assetsSubDirectory: 'css'
+    assetsSubDirectory: ''
   }
 }

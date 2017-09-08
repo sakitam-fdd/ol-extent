@@ -4,7 +4,7 @@
  */
 import {BASE_CLASS_NAME} from '../constants'
 import * as htmlUtils from 'nature-dom-util/src/utils/domUtils'
-import '../scss/loading.scss'
+import '../asset/scss/loading.scss'
 ol.control.Loading = function (params) {
   /**
    * 当前配置

@@ -2,7 +2,7 @@
  * Created by FDD on 2016/11/5.
  * @desc 动态圆，主要用于周边搜索功能
  */
-import '../scss/freeHandCircle.scss'
+import '../asset/scss/freeHandCircle.scss'
 import olStyleFactory from '../style/factory'
 import olLayerLayerUtils from '../layer/layerUtils'
 import Observable from 'observable-emit'
