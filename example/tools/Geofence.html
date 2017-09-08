@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>地理围栏功能</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <link rel="stylesheet" href="../../node_modules/openlayers/dist/ol.css">
+  <link rel="stylesheet" href="../css/button.css">
+  <style>
+    html, body, #map {
+      width: 100%;
+      height: 100%;
+      padding: 0;
+      margin: 0;
+    }
+    .tool {
+      position: absolute;
+      top: 10px;
+      left: calc(50% - 290px);
+    }
+    .ol-viewport {
+      position: inherit!important;
+    }
+  </style>
+</head>
+<body>
+<div class="tool">
+</div>
+<div class="map" id="map"></div>
+<script src="../../node_modules/openlayers/dist/ol.js"></script>
+<script src="../../dist/olToolsGeofence.js"></script>
+<script type="text/javascript">
+  var center = [1.295722616075553E7, 4865106.159131439]
+  var map = new ol.Map({
+    layers: [
+      new ol.layer.Tile({
+        source: new ol.source.OSM()
+      })
+    ],
+    target: 'map',
+    view: new ol.View({
+      center: center,
+      zoom: 15
+    })
+  });
+  var vector = new ol.layer.Vector({
+    source: new ol.source.Vector()
+  })
+  var vectorLayer = new ol.layer.Vector({
+    source: new ol.source.Vector()
+  })
+  map.addLayer(vector)
+  map.addLayer(vectorLayer)
+  var geoFence = new ol.tools.Geofence()
+  geoFence.on('enter', function (event) {
+    console.log(event)
+  })
+  var geom = new ol.geom.Polygon([
+    [
+      [1.295722616075553E7, 4865106.159131439],
+      [1.2957239741733408E7, 4865104.560776229],
+      [1.2957259111324806E7, 4865099.329797334],
+      [1.2957316663501544E7, 4865072.012507915],
+      [1.2957328129409099E7, 4865061.550587195],
+      [1.295734660844457E7, 4865036.7035697],
+      [1.2957364085604623E7, 4865001.540060614],
+      [1.2957383232557042E7, 4864947.342003437],
+      [1.2957385792905327E7, 4864936.008398873],
+      [1.2957389911726486E7, 4864890.528808173],
+      [1.2957387351378199E7, 4864862.485586163],
+      [1.2957382675959585E7, 4864833.425336071],
+      [1.2957374549636759E7, 4864778.646996041],
+      [1.2957357740393648E7, 4864747.843393881],
+      [1.2957342934901373E7, 4864728.518541332],
+      [1.2957317776696453E7, 4864706.723639999],
+      [1.295728671855852E7, 4864687.2535686195],
+      [1.2957271245149301E7, 4864680.279223983],
+      [1.2957219592905574E7, 4864667.057042402],
+      [1.2957192764908293E7, 4864667.638236825],
+      [1.2957172059483007E7, 4864670.108313509],
+      [1.2957153691767024E7, 4864675.920261076],
+      [1.2957140444747617E7, 4864681.296315604],
+      [1.295711517522321E7, 4864692.0484334],
+      [1.2957085118960695E7, 4864714.133901081],
+      [1.2957062855062537E7, 4864736.510017145],
+      [1.295705083255753E7, 4864753.364787236],
+      [1.2957036027065255E7, 4864779.518797497],
+      [1.2957016212195894E7, 4864832.117626821],
+      [1.295701020094339E7, 4864889.366393253],
+      [1.2957011759416262E7, 4864917.264388959],
+      [1.2957013985806078E7, 4864931.794626115],
+      [1.2957036027065255E7, 4864997.762170356],
+      [1.2957054840059198E7, 4865027.549421041],
+      [1.2957067753120132E7, 4865044.2593813045],
+      [1.2957084785002222E7, 4865057.772674096],
+      [1.2957105156469038E7, 4865076.952863195],
+      [1.295712675245025E7, 4865087.5601049075],
+      [1.2957135880648497E7, 4865093.517601796],
+      [1.2957177180179581E7, 4865103.543641226],
+      [1.2957203006301444E7, 4865108.6293172715],
+      [1.2957225938116549E7, 4865106.5950465435]
+    ]
+  ])
+  geom.set('id', '01')
+  var circel = new ol.geom.Circle([1.295722616075553E7, 4865106.159131439], 1000)
+  circel.set('id', '02')
+  geoFence.addGeofence(circel, {
+    duration: 0, // 有效时间，单位毫秒，如小于等于0则表示长期有效
+    dwellDelay: 10000 // 判断停留的延迟，单位毫秒，只有停留超过一定时间才会触发停留事件
+  })
+  geoFence.addGeofence(geom, {
+    duration: 0, // 有效时间，单位毫秒，如小于等于0则表示长期有效
+    dwellDelay: 10000 // 判断停留的延迟，单位毫秒，只有停留超过一定时间才会触发停留事件
+  })
+  var feature1 = new ol.Feature({
+    geometry: geom
+  })
+  var feature2 = new ol.Feature({
+    geometry: circel
+  })
+  vector.getSource().addFeature(feature1)
+  vector.getSource().addFeature(feature2)
+
+  for (var i = 0; i < 100; i++) {
+    var point = new ol.Feature({
+      geometry: new ol.geom.Point([
+        center[0] - 300 + 600 * Math.random(),
+        center[1] - 300 + 600 * Math.random()
+      ])
+    })
+    point.setId(i)
+    vectorLayer.getSource().addFeature(point)
+  }
+
+  var move = function(){
+    var visitors = vectorLayer.getSource().getFeatures();
+    geoFence.updateVisitor(visitor);
+    for(var i in visitors){
+      if(Math.random() < 0.6){
+        continue;
+      }
+      var visitor = visitors[i];
+      var id = visitor.getId()
+      var x = visitor.getGeometry().getCoordinates()[0];
+      var y = visitor.getGeometry().getCoordinates()[1];
+      var newX = x - 10 + 20 * Math.random();
+      var newY = y - 10 + 20 * Math.random();
+      visitor.getGeometry().setCoordinates([newX, newY]);
+      geoFence.updateVisitor(visitor);
+    }
+    setTimeout(move, 500);
+  };
+  move();
+</script>
+</body>
+</html>

@@ -101,7 +101,7 @@ ol.control.ContextMenu.prototype.show = function (position) {
   this.element_.style.display = 'block'
   this.element_.style.top = position[1] + 'px'
   this.element_.style.left = position[0] + 'px'
-  let aDoc = [this.mapContent.offsetWidth, this.mapContent.offsetHeight]
+  let aDoc = this.getMap().getSize()
   let maxWidth = aDoc[0] - this.element_.offsetWidth
   let maxHeight = aDoc[1] - this.element_.offsetHeight
   if (this.element_.offsetTop > maxHeight) {
@@ -257,6 +257,9 @@ ol.control.ContextMenu.prototype.handleItemClick_ = function (event, item) {
     pixel: this.getCurrentPixel(),
     coordinates: this.getCurrentCoordinates()
   })
+  window.setTimeout(() => {
+    this.hide()
+  }, 50)
 }
 
 /**
