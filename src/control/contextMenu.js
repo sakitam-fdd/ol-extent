@@ -8,6 +8,7 @@ import * as htmlUtils from 'nature-dom-util/src/utils/domUtils'
 import * as Events from 'nature-dom-util/src/events/Events'
 import Observable from 'observable-emit'
 import mixin from '../utils/mixin'
+import cloneDeep from 'lodash/cloneDeep'
 ol.control.ContextMenu = function (params = {}) {
   this.options = params
 
@@ -80,12 +81,15 @@ ol.control.ContextMenu.prototype.mouseDownHandle_ = function (event) {
   event.preventDefault()
   if (event.button === 2) {
     that.pixel = this.getMap().getEventPixel(event)
+    this.dispatch('before-show', event)
     window.setTimeout(() => {
       that.show(that.pixel)
+      that.dispatch('show', event)
     }, 50)
   }
   Events.listen(event.target, 'mousedown', function () {
     that.hide()
+    that.dispatch('hide', event)
   }, this, true)
 }
 
@@ -167,21 +171,55 @@ ol.control.ContextMenu.prototype.htmlUtils = function (items, index, content, is
           Events.listen(li_, 'mouseenter', this.handleItemMouseOver_, this)
           Events.listen(li_, 'mouseleave', this.handleItemMouseOut_, this)
         }
-        if (item['callback'] && typeof item['callback'] === 'function') {
-          Events.listen(li_, 'click', function (event) {
-            window.setTimeout(() => {
-              item['callback'](event, {
-                source: item,
-                pixel: that.getCurrentPixel(),
-                coordinates: that.getCurrentCoordinates()
-              })
-            })
-          }, this)
-        }
       }
     })
   }
   return ulList
+}
+
+/**
+ * 更新面板元素
+ * @param type
+ * @param item
+ * @param items
+ * @private
+ */
+ol.control.ContextMenu.prototype.updateElement_ = function (type, item, items) {
+  let child_ = htmlUtils.get(this.className_ + '-ul' + '-inner')
+  let cloneItems = cloneDeep(this.options['items'])
+  let afterItems = null
+  switch (type) {
+    case 'pop': // 移除最后一个
+      this.element_.removeChild(child_)
+      afterItems = cloneItems.pop()
+      this.htmlUtils(cloneItems, '', this.element_)
+      break
+    case 'push': // 数组的末尾添加新的元素
+      this.element_.removeChild(child_)
+      afterItems = cloneItems = cloneItems.push(item)
+      this.htmlUtils(cloneItems, '', this.element_)
+      break
+    case 'shift': // 删除数组的第一个元素
+      this.element_.removeChild(child_)
+      afterItems = cloneItems.shift()
+      this.htmlUtils(cloneItems, '', this.element_)
+      break
+    case 'unshift': // 在数组的开头添加新元素
+      this.element_.removeChild(child_)
+      afterItems = cloneItems = cloneItems.unshift(item)
+      this.htmlUtils(cloneItems, '', this.element_)
+      break
+    case 'reverse':
+      this.element_.removeChild(child_)
+      afterItems = cloneItems.reverse()
+      this.htmlUtils(cloneItems, '', this.element_)
+      break
+    default:
+      this.element_.removeChild(child_)
+      afterItems = items
+      this.htmlUtils(items, '', this.element_)
+  }
+  return afterItems
 }
 
 /**
@@ -207,6 +245,13 @@ ol.control.ContextMenu.prototype.getCurrentCoordinates = function () {
  * @private
  */
 ol.control.ContextMenu.prototype.handleItemClick_ = function (event, item) {
+  if (item && item['callback'] && typeof item['callback'] === 'function') {
+    item['callback'](event, {
+      source: item,
+      pixel: this.getCurrentPixel(),
+      coordinates: this.getCurrentCoordinates()
+    })
+  }
   this.dispatch('item-click', event, {
     source: item,
     pixel: this.getCurrentPixel(),
@@ -264,6 +309,76 @@ ol.control.ContextMenu.prototype.setMap = function (map) {
   ol.control.Control.prototype.setMap.call(this, map)
   if (map && map instanceof ol.Map) {
     this.initDomInternal(this.options['items'])
+  }
+}
+
+/**
+ * 移除菜单最后一项
+ */
+ol.control.ContextMenu.prototype.pop = function () {
+  return this.updateElement_('pop')
+}
+
+/**
+ * 向菜单末尾添加一项
+ * @param item
+ */
+ol.control.ContextMenu.prototype.push = function (item) {
+  if (item && typeof item === 'object') {
+    return this.updateElement_('push', item)
+  } else {
+    throw new Error('传入的不是对象')
+  }
+}
+
+/**
+ * 移除菜单第一项
+ */
+ol.control.ContextMenu.prototype.shift = function () {
+  return this.updateElement_('shift')
+}
+
+/**
+ * 倒叙菜单
+ */
+ol.control.ContextMenu.prototype.reverse = function () {
+  return this.updateElement_('reverse')
+}
+
+/**
+ * 向菜单开头添加一项
+ * @param item
+ */
+ol.control.ContextMenu.prototype.unshift = function (item) {
+  if (item && typeof item === 'object') {
+    return this.updateElement_('unshift', item)
+  } else {
+    throw new Error('传入的不是对象')
+  }
+}
+
+/**
+ * 更新菜单
+ * @param items
+ */
+ol.control.ContextMenu.prototype.update = function (items) {
+  if (items && Array.isArray(items) && items.length > 0) {
+    this.updateElement_('', '', items)
+  } else {
+    throw new Error('传入的数组有误！')
+  }
+}
+
+/**
+ * 更新内置配置
+ * @param items
+ */
+ol.control.ContextMenu.prototype.updateOption = function (items) {
+  if (items && Array.isArray(items) && items.length > 0) {
+    this.options['items'] = items
+    this.updateElement_('', '', items)
+  } else {
+    throw new Error('传入的数组有误！')
   }
 }
 
