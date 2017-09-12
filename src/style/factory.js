@@ -46,7 +46,7 @@ ol.style.Factory.prototype._getRegularShape = function (options) {
       stroke: (this._getStroke(options['stroke']) || undefined),
       rotation: ((typeof options['rotation'] === 'number') ? options['rotation'] : 0),
       rotateWithView: ((typeof options['rotateWithView'] === 'boolean') ? options['rotateWithView'] : false),
-      atlasManager: (options['rotateWithView'] ? options['rotateWithView'] : undefined)
+      atlasManager: (options['atlasManager'] ? options['atlasManager'] : undefined)
     })
     return regularShape
   } catch (e) {
@@ -143,7 +143,7 @@ ol.style.Factory.prototype._getText = function (options) {
     let text = new ol.style.Text({
       font: ((options['textFont'] && typeof options['textFont'] === 'string') ? options['textFont'] : '10px sans-serif'),
       offsetX: (typeof options['textOffsetX'] === 'number' ? options['textOffsetX'] : 0),
-      offsetY: (typeof options['textOffsetX'] === 'number' ? options['textOffsetY'] : 0),
+      offsetY: (typeof options['textOffsetY'] === 'number' ? options['textOffsetY'] : 0),
       scale: (typeof options['textScale'] === 'number' ? options['textScale'] : undefined),
       rotation: (typeof options['textRotation'] === 'number' ? options['textRotation'] : 0),
       text: ((options['text'] && typeof options['text'] === 'string') ? options['text'] : undefined),
