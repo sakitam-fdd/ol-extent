@@ -35,6 +35,52 @@ ol.render.render3D = function (params = {}) {
    * @private
    */
   this.height_ = this.getHeight_(options['height'])
+
+  /**
+   * 默认样式
+   * @type {{stroke: {strokeWidth: number, strokeColor: string}, fill: {fillColor: string}}}
+   */
+  this.baseStyle = {
+    stroke: {
+      strokeWidth: 1,
+      strokeColor: 'rgba(196,189,181,1)'
+    },
+    fill: {
+      fillColor: 'rgba(248,238,228,1)'
+    },
+    text: {
+      stroke: {
+        strokeWidth: 1,
+        strokeColor: 'rgba(87,87,87,1)'
+      },
+      fill: {
+        fillColor: 'rgba(255,255,255,0.5)'
+      },
+      textAlign: 'center',
+      textBaseline: 'bottom',
+      textScale: 1
+    }
+  }
+  if (options['style']) {
+    this.eachObject(this.baseStyle, options['style'])
+  }
+}
+
+/**
+ * 赋值参数中的值
+ * @param base
+ * @param params
+ */
+ol.render.render3D.prototype.eachObject = function (base = {}, params = {}) {
+  for (let key in base) {
+    if (key && base[key] && params[key]) {
+      if (typeof base[key] === 'object') {
+        this.eachObject(base[key], params[key])
+      } else {
+        base[key] = params[key]
+      }
+    }
+  }
 }
 
 /**
@@ -50,7 +96,6 @@ ol.render.render3D.prototype.postcompose_ = function (event) {
       let elapsed = event.frameState.time - this.animate_
       if (elapsed < this.animateDuration_) {
         this.elapsedRatio_ = this.easing_(elapsed / this.animateDuration_)
-        // tell OL3 to continue postcompose animation
         event.frameState.animate = true
       } else {
         this.animate_ = false
@@ -60,7 +105,6 @@ ol.render.render3D.prototype.postcompose_ = function (event) {
     let ratio = event.frameState.pixelRatio
     let ctx = event.context
     let matrix = this.matrix_ = event.frameState.coordinateToPixelTransform
-    // Old version (matrix)
     if (!matrix) {
       matrix = event.frameState.coordinateToPixelMatrix
       matrix[2] = matrix[4]
@@ -72,9 +116,9 @@ ol.render.render3D.prototype.postcompose_ = function (event) {
     let features_ = this.layer_.getSource().getFeaturesInExtent(event.frameState.extent)
     ctx.save()
     ctx.scale(ratio, ratio)
-    ctx.lineWidth = 1
-    ctx.strokeStyle = 'red'
-    ctx.fillStyle = 'rgba(0,0,255,0.5)'
+    ctx.lineWidth = this.baseStyle.stroke.strokeWidth
+    ctx.strokeStyle = this.baseStyle.stroke.strokeColor
+    ctx.fillStyle = this.baseStyle.fill.fillColor
     let builds = []
     features_.forEach(feature => {
       builds.push(this.getFeature3D_(feature, this.getFeatureHeight(feature)))
@@ -188,39 +232,27 @@ ol.render.render3D.prototype.handleVector_ = function (point, height) {
 
 /**
  * 获取3D要素
- * @param features
+ * @param feature
  * @param height
  * @returns {{type: string, feature: *, geom: string}}
  * @private
  */
-ol.render.render3D.prototype.getFeature3D_ = function (features, height) {
-  let coordinates = features.getGeometry().getCoordinates()
+ol.render.render3D.prototype.getFeature3D_ = function (feature, height) {
+  let coordinates = feature.getGeometry().getCoordinates()
   let json = {
     type: '',
-    feature: features,
+    feature: feature,
     geom: ''
   }
-  switch (features.getGeometry().getType()) {
+  switch (feature.getGeometry().getType()) {
     case 'Polygon':
       coordinates = [coordinates]
+      json.type = 'MultiPolygon'
+      json.geom = this.getBuilds_(coordinates, height)
       break
     case 'MultiPolygon':
-      let build = []
-      coordinates.forEach(coords => {
-        if (coords && Array.isArray(coords) && coords.length > 0) {
-          coords.forEach(coord => {
-            if (coord && Array.isArray(coord) && coord.length > 0) {
-              let bear = []
-              coord.forEach(cod => {
-                bear.push(this.handleVector_(cod, height))
-              })
-              build.push(bear)
-            }
-          })
-        }
-      })
       json.type = 'MultiPolygon'
-      json.geom = build
+      json.geom = this.getBuilds_(coordinates, height)
       break
     case 'Point':
       json.type = 'Point'
@@ -231,6 +263,31 @@ ol.render.render3D.prototype.getFeature3D_ = function (features, height) {
       break
   }
   return json
+}
+
+/**
+ * 获取builds
+ * @param coordinates
+ * @param height
+ * @returns {Array}
+ * @private
+ */
+ol.render.render3D.prototype.getBuilds_ = function (coordinates, height) {
+  let build = []
+  coordinates.forEach(coords => {
+    if (coords && Array.isArray(coords) && coords.length > 0) {
+      coords.forEach(coord => {
+        if (coord && Array.isArray(coord) && coord.length > 0) {
+          let bear = []
+          coord.forEach(cod => {
+            bear.push(this.handleVector_(cod, height))
+          })
+          build.push(bear)
+        }
+      })
+    }
+  })
+  return build
 }
 
 /**
@@ -289,13 +346,13 @@ ol.render.render3D.prototype.drawFeature3D_ = function (ctx, buildings) {
       case 'Point': {
         let build = buildings[i]
         let [label, point, fill] = [build.feature.get('label'), build.geom[1], ctx.fillStyle]
-        ctx.fillStyle = ctx.strokeStyle
-        ctx.textAlign = 'center'
-        ctx.textBaseline = 'bottom'
+        ctx.fillStyle = this.baseStyle.text.stroke.strokeColor
+        ctx.textAlign = this.baseStyle.text.textAlign
+        ctx.textBaseline = this.baseStyle.text.textBaseline
         ctx.fillText(label, point[0], point[1])
         let m = ctx.measureText(label)
         let h = Number(ctx.font.match(/\d+(\.\d+)?/g).join([]))
-        ctx.fillStyle = 'rgba(255,255,255,0.5)'
+        ctx.fillStyle = this.baseStyle.text.fill.fillColor
         ctx.fillRect(point[0] - m.width / 2 - 5, point[1] - h - 5, m.width + 10, h + 10)
         ctx.strokeRect(point[0] - m.width / 2 - 5, point[1] - h - 5, m.width + 10, h + 10)
         ctx.fillStyle = fill
