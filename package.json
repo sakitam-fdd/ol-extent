@@ -15,6 +15,7 @@
     "olInteractionMeasureTool": "src/interaction/measureTool.js",
     "olInteractionFreeHandCircle": "src/interaction/freeHandCircle.js",
     "olLayerUtils": "src/layer/layerUtils.js",
+    "olRender3D": "src/render/render3D.js",
     "olStyleFactory": "src/style/factory.js",
     "olPopover": "src/overlay/popover.js",
     "olSourceBaidu": "src/source/Baidu.js",
