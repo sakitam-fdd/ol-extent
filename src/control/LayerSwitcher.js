@@ -99,8 +99,9 @@ ol.control.LayerSwitcher = function (params = {}) {
 
   if (this.options['layers'] && Array.isArray(this.options['layers']) && this.options['layers'].length > 0) {
     this.initDomInternal(this.options['layers'], this.className_, this.options['key'])
+  } else {
+    this.element_.style.display = 'none'
   }
-
   ol.control.Control.call(this, {
     element: this.element_,
     target: this.options['target']
