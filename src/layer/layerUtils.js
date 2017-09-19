@@ -67,8 +67,8 @@ ol.layer.LayerUtils.prototype.getLayersArrayInternal = function (layers, key, va
     layers.forEach(layer => {
       if (layer instanceof ol.layer.Group) {
         let layers = layer.getLayers().getArray()
-        _target = this.getLayerInternal(layers, key, value)
-        if (_target) {
+        let _layer = this.getLayerInternal(layers, key, value)
+        if (_layer) {
           _target.push(layer)
         }
       } else if (layer.get(key) === value) {
