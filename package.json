@@ -12,6 +12,7 @@
     "olControlContextMenu": "src/control/contextMenu.js",
     "olControlZoomMenu": "src/control/zoom.js",
     "olControlFullScreenMenu": "src/control/FullScreen.js",
+    "olControlRotate": "src/control/RotateControl.js",
     "olInteractionLayerMagnify": "src/interaction/layerMagnify.js",
     "olInteractionLayerSpyglass": "src/interaction/layerSpyglass.js",
     "olInteractionMeasureTool": "src/interaction/measureTool.js",
