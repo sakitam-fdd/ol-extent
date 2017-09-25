@@ -2,6 +2,7 @@
  * Created by FDD on 2017/7/21.
  * @desc 全局地图加载loading
  */
+import ol from 'openlayers'
 import {BASE_CLASS_NAME} from '../constants'
 import * as htmlUtils from 'nature-dom-util/src/utils/domUtils'
 import '../asset/scss/loading.scss'

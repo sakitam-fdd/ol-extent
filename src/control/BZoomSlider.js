@@ -2,6 +2,7 @@
  * Created by FDD on 2017/7/28.
  * @desc 定制缩放控制条(仿百度)
  */
+import ol from 'openlayers'
 import '../asset/scss/zoomSlider.scss'
 import {BASE_CLASS_NAME} from '../constants'
 import * as htmlUtils from 'nature-dom-util/src/utils/domUtils'

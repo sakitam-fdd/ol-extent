@@ -2,7 +2,7 @@
  * Created by FDD on 2017/5/1.
  * @desc 通过json获取样式
  */
-
+import ol from 'openlayers'
 ol.style.Factory = function (options) {
   let option = (options && typeof options === 'object') ? options : {}
   let style = new ol.style.Style({})

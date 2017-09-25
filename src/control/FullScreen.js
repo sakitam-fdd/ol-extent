@@ -2,6 +2,7 @@
  * Created by FDD on 2017/9/19.
  * @desc 全屏控制
  */
+import ol from 'openlayers'
 import '../asset/scss/fullScreen.scss'
 import {BASE_CLASS_NAME} from '../constants'
 import * as htmlUtils from 'nature-dom-util/src/utils/domUtils'

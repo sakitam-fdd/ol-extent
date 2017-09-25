@@ -2,6 +2,7 @@
  * Created by FDD on 2017/5/14.
  * @desc 用于地图弹出气泡
  */
+import ol from 'openlayers'
 import '../asset/scss/popover.scss'
 import * as DomUtils from 'nature-dom-util/src/utils/domUtils'
 import {getuuid} from '../utils/utils'

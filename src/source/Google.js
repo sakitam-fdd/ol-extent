@@ -6,6 +6,7 @@
  * @param {olx.source.OSMOptions=} optOptions Open Street Map options.
  * @api
  */
+import ol from 'openlayers'
 ol.source.GOOGLE = function (optOptions) {
   let options = optOptions || {}
   let attributions = ''

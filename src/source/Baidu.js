@@ -6,6 +6,7 @@
  * @param {olx.source.OSMOptions=} optOptions Open Street Map options.
  * @api
  */
+import ol from 'openlayers'
 ol.source.BAIDU = function (optOptions) {
   var options = optOptions || {}
   var attributions = ''

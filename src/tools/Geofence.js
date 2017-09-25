@@ -2,6 +2,7 @@
  * Created by FDD on 2017/9/8.
  * @desc 实现地理围栏功能
  */
+import ol from 'openlayers'
 import Observable from 'observable-emit'
 import mixin from '../utils/mixin'
 import {has, getuuid} from '../utils/utils'

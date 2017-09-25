@@ -2,6 +2,7 @@
  * Created by FDD on 2016/11/7.
  * @desc 右键功能(迁移自项目扩展)
  */
+import ol from 'openlayers'
 import '../asset/scss/contextMenu.scss'
 import {BASE_CLASS_NAME} from '../constants'
 import * as htmlUtils from 'nature-dom-util/src/utils/domUtils'

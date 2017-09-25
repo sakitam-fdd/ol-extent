@@ -2,7 +2,7 @@
  * Created by FDD on 2017/7/28.
  * @desc 图层滤镜
  */
-
+import ol from 'openlayers'
 import * as Events from 'nature-dom-util/src/events/Events'
 ol.interaction.LayerMagnify = function (params) {
   this.options = params || {}

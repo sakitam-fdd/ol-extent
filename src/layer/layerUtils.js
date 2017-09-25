@@ -1,3 +1,4 @@
+import ol from 'openlayers'
 ol.layer.LayerUtils = function (map) {
   if (map && map instanceof ol.Map) {
     this.map = map

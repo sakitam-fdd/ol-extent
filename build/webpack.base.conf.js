@@ -30,7 +30,7 @@ module.exports = {
     umdNamedDefine: true
   },
   externals: {
-    ol: 'ol'
+    openlayers: 'ol'
   },
   module: {
     rules: [

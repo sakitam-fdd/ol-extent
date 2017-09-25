@@ -1,3 +1,4 @@
+import ol from 'openlayers'
 import olStyleFactory from '../style/factory'
 import olLayerLayerUtils from '../layer/layerUtils'
 import {getuuid} from '../utils/utils'

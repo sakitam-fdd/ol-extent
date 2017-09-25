@@ -24,7 +24,6 @@
     "olSourceBaidu": "src/source/Baidu.js",
     "olSourceGaode": "src/source/Gaode.js",
     "olSourceGoogle": "src/source/Google.js",
-    "olToolsPrintfMap": "src/tools/printfMap.js",
     "olToolsGeofence": "src/tools/Geofence.js",
     "olExtent": "src/index.js"
   },

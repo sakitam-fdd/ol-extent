@@ -3,7 +3,7 @@
  * @desc render 3D vector layer
  * @base https://github.com/Viglino/ol3-ext
  */
-
+import ol from 'openlayers'
 ol.layer.Vector.prototype.setRender3D = function (render) {
   render.setLayer(this)
 }

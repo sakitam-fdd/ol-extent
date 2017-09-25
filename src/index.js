@@ -16,7 +16,7 @@ import olPopover from './overlay/popover'
 import olSourceBaidu from './source/Baidu'
 import olSourceGaode from './source/Gaode'
 import olSourceGoogle from './source/Google'
-import olToolsPrintfMap from './tools/printfMap'
+// import olToolsPrintfMap from './tools/printfMap'
 export {
   olControlLoading,
   olControlBZoomSlider,
@@ -32,6 +32,6 @@ export {
   olPopover,
   olSourceGoogle,
   olSourceBaidu,
-  olSourceGaode,
-  olToolsPrintfMap
+  olSourceGaode
+  // olToolsPrintfMap
 }

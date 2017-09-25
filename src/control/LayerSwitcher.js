@@ -2,6 +2,7 @@
  * Created by FDD on 2017/9/6.
  * @ 图层切换功能控件
  */
+import ol from 'openlayers'
 import '../asset/scss/layerSwitcher.scss'
 import {BASE_CLASS_NAME} from '../constants'
 import * as htmlUtils from 'nature-dom-util/src/utils/domUtils'

@@ -2,6 +2,7 @@
  * Created by FDD on 2017/9/19.
  * @desc 缩放按钮
  */
+import ol from 'openlayers'
 import '../asset/scss/zoom.scss'
 import {BASE_CLASS_NAME} from '../constants'
 import * as htmlUtils from 'nature-dom-util/src/utils/domUtils'

@@ -2,6 +2,7 @@
  * Created by FDD on 2017/8/31.
  * @ 地图打印功能
  */
+import ol from 'openlayers'
 import 'core-js/es6/promise'
 import {has} from '../utils/utils'
 import fileSaver from 'file-saver'
