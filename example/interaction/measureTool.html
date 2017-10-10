@@ -5,7 +5,6 @@
   <title>测量工具</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <link rel="stylesheet" href="../../node_modules/openlayers/dist/ol.css">
-  <link rel="stylesheet" href="../css/button.css">
   <link rel="stylesheet" href="../../dist/css/olInteractionMeasureTool.css">
   <style>
     html, body, #map {
@@ -46,7 +45,8 @@
     ],
     target: 'map',
     view: new ol.View({
-      center: ol.proj.fromLonLat([-109, 46.5]),
+      center: [113.53450137499999, 34.44104525],
+      projection: 'EPSG:4326',
       zoom: 6
     })
   });
