@@ -6,6 +6,7 @@ import olControlBZoomSlider from './control/BZoomSlider'
 import olControlCompareLayer from './control/compareLayer'
 import olControlLayerSwitcher from './control/LayerSwitcher'
 import olControlContextMenu from './control/contextMenu'
+import olControlScaleLine from './control/ScaleLineH'
 import olInteractionLayerMagnify from './interaction/layerMagnify'
 import olInteractionLayerSpyglass from './interaction/layerSpyglass'
 import olInteractionMeasureTool from './interaction/measureTool'
@@ -23,6 +24,7 @@ export {
   olControlCompareLayer,
   olControlLayerSwitcher,
   olControlContextMenu,
+  olControlScaleLine,
   olInteractionLayerMagnify,
   olInteractionLayerSpyglass,
   olInteractionMeasureTool,

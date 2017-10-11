@@ -1,6 +1,6 @@
 {
   "name": "ol-extent",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "a JavaScript library for openlayers extent",
   "main": "dist/olExtent.js",
   "module": "src/index.js",
@@ -13,6 +13,7 @@
     "olControlZoomMenu": "src/control/zoom.js",
     "olControlFullScreenMenu": "src/control/FullScreen.js",
     "olControlRotate": "src/control/RotateControl.js",
+    "olControlScaleLine": "src/control/ScaleLineH.js",
     "olInteractionLayerMagnify": "src/interaction/layerMagnify.js",
     "olInteractionLayerSpyglass": "src/interaction/layerSpyglass.js",
     "olInteractionMeasureTool": "src/interaction/measureTool.js",
