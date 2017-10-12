@@ -49,8 +49,21 @@ const getuuid = () => {
   return (s.join(''))
 }
 
+/**
+ * 替换节点
+ * @param newNode
+ * @param oldNode
+ */
+const replaceNode = (newNode, oldNode) => {
+  let parent = oldNode.parentNode
+  if (parent) {
+    parent.replaceChild(newNode, oldNode)
+  }
+}
+
 export {
   has,
   checkBrowser,
-  getuuid
+  getuuid,
+  replaceNode
 }

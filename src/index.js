@@ -8,6 +8,7 @@ import olControlLayerSwitcher from './control/LayerSwitcher'
 import olControlContextMenu from './control/contextMenu'
 import olControlScaleLine from './control/ScaleLineH'
 import olControlMousePosition from './control/MousePosition'
+import olControlOverviewMap from './control/OverviewMap'
 import olInteractionLayerMagnify from './interaction/layerMagnify'
 import olInteractionLayerSpyglass from './interaction/layerSpyglass'
 import olInteractionMeasureTool from './interaction/measureTool'
@@ -27,6 +28,7 @@ export {
   olControlContextMenu,
   olControlScaleLine,
   olControlMousePosition,
+  olControlOverviewMap,
   olInteractionLayerMagnify,
   olInteractionLayerSpyglass,
   olInteractionMeasureTool,

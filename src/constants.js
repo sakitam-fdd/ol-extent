@@ -4,10 +4,10 @@
  */
 
 const BASE_CLASS_NAME = {
-  CLASS_HIDDEN: 'ol-hidden',
-  CLASS_SELECTABLE: 'ol-selectable',
-  CLASS_UNSELECTABLE: 'ol-unselectable',
-  CLASS_CONTROL: 'ol-control'
+  CLASS_HIDDEN: 'hmap-hidden',
+  CLASS_SELECTABLE: 'hmap-selectable',
+  CLASS_UNSELECTABLE: 'hmap-unselectable',
+  CLASS_CONTROL: 'hmap-control'
 }
 
 let UNITS = {
