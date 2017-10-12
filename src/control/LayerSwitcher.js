@@ -60,7 +60,7 @@ ol.control.LayerSwitcher = function (params = {}) {
    * 标准labelLayer关键字
    * @type {string}
    */
-  this.labelLayerKey = this.options['labelLayerKey'] ? this.options['labelLayerKey'] : 'isLabelLayerKey'
+  this.labelLayerKey = this.options['labelLayerKey'] ? this.options['labelLayerKey'] : 'isLabelLayer'
 
   /**
    * 是否已经默认执行选中操作
@@ -68,6 +68,11 @@ ol.control.LayerSwitcher = function (params = {}) {
    * @private
    */
   this.isActionSelected_ = false
+
+  /**
+   * 是否每次操作之前强制更新图层，这在底图可能发生变化时比较有用。
+   */
+  this.forcedUpdate = this.options['forcedUpdate']
 
   /**
    * height
@@ -140,7 +145,13 @@ ol.control.LayerSwitcher.prototype.initDomInternal = function (layers, className
         name_.setAttribute('data-name', item[key])
         name_.innerHTML = item['name']
       }
-      if (!this.isActionSelected_ && (item[this.isDefaultKey] || index === length - 1)) {
+      if (!this.isActionSelected_) {
+        if (item[this.isDefaultKey]) {
+          htmlUtils.addClass(li_, 'selected-item')
+          this.isActionSelected_ = true
+        }
+      }
+      if (!this.isActionSelected_ && (index === length - 1)) {
         htmlUtils.addClass(li_, 'selected-item')
         this.isActionSelected_ = true
       }
@@ -199,17 +210,33 @@ ol.control.LayerSwitcher.prototype.handleClick_ = function (event) {
 }
 
 /**
+ * 更新底图和标准层
+ * @private
+ */
+ol.control.LayerSwitcher.prototype.updateBaseLayer_ = function () {
+  if (!this.map) return
+  this.baseLayers_ = this.getLayersArrayByKeyValue(this.baseLayerKey, true)
+  this.labelLayers_ = this.getLayersArrayByKeyValue(this.labelLayerKey, true)
+  if (this.baseLayers_ && this.baseLayers_.length > 0) {
+    this.baseLayers_.filter(_item => {
+      return !!_item
+    })
+  }
+  if (this.labelLayers_ && this.labelLayers_.length > 0) {
+    this.labelLayers_.filter(_item => {
+      return !!_item
+    })
+  }
+}
+
+/**
  * 切换底图
  * @param key
  * @param value
  */
 ol.control.LayerSwitcher.prototype.switcher = function (key, value) {
-  if (!this.map) return
-  if (this.baseLayers_.length <= 0) {
-    this.baseLayers_ = this.getLayersArrayByKeyValue(this.baseLayerKey, true)
-  }
-  if (this.labelLayers_.length <= 0) {
-    this.labelLayers_ = this.getLayersArrayByKeyValue(this.labelLayerKey, true)
+  if (this.forcedUpdate) {
+    this.updateBaseLayer_()
   }
   if (this.baseLayers_.length > 0 && this.baseLayers_.length === this.options['layers'].length) {
     if (this.labelLayers_ && this.labelLayers_.length > 0) { // 处理标注层
@@ -254,8 +281,7 @@ ol.control.LayerSwitcher.prototype.setMap = function (map) {
   ol.control.Control.prototype.setMap.call(this, map)
   this.map = map
   if (map && map instanceof ol.Map) {
-    this.baseLayers_ = this.getLayersArrayByKeyValue(this.baseLayerKey, true)
-    this.labelLayers_ = this.getLayersArrayByKeyValue(this.labelLayerKey, true)
+    this.updateBaseLayer_()
   }
 }
 
