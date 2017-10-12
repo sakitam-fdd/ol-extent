@@ -3,7 +3,7 @@
  * @desc 比例尺控件
  */
 import '../asset/scss/ScaleLineH.scss'
-import {BASE_CLASS_NAME} from '../constants'
+import {BASE_CLASS_NAME, UNITS} from '../constants'
 import * as htmlUtils from 'nature-dom-util/src/utils/domUtils'
 import * as Events from 'nature-dom-util/src/events/Events'
 ol.control.ScaleLineH = function (options = {}) {
@@ -136,13 +136,13 @@ ol.control.ScaleLineH.prototype.updateElement_ = function () {
   }
   let [center, projection] = [viewState.center, viewState.projection]
   let units = this.getUnits()
-  let pointResolutionUnits = units === ol.control.ScaleLineH.ScaleLineUnits.DEGREES ? ol.proj.Units.DEGREES : ol.proj.Units.METERS
+  let pointResolutionUnits = units === ol.control.ScaleLineH.ScaleLineUnits.DEGREES ? UNITS.DEGREES : UNITS.METERS
   let pointResolution = ol.proj.getPointResolution(projection, viewState.resolution, center, pointResolutionUnits)
   let nominalCount = this.minWidth_ * pointResolution
   let suffix = ''
   if (units === ol.control.ScaleLineH.ScaleLineUnits.DEGREES) {
-    let metersPerDegree = ol.proj.METERS_PER_UNIT[ol.proj.Units.DEGREES]
-    if (projection.getUnits() === ol.proj.Units.DEGREES) {
+    let metersPerDegree = ol.proj.METERS_PER_UNIT[UNITS.DEGREES]
+    if (projection.getUnits() === UNITS.DEGREES) {
       nominalCount *= metersPerDegree
     } else {
       pointResolution /= metersPerDegree
