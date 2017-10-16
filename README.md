@@ -16,10 +16,10 @@ npm run build
 ### CDN
 
 ```bash
-https://unpkg.com/ol-extent@1.1.2/dist/olExtent.min.js
-https://unpkg.com/ol-extent@1.1.2/dist/olExtent.js
-https://unpkg.com/ol-extent@1.1.1/dist/css/olExtent.css
-https://unpkg.com/ol-extent@1.1.2/dist/css/olExtent.min.css
+https://unpkg.com/ol-extent@1.1.3/dist/olExtent.min.js
+https://unpkg.com/ol-extent@1.1.3/dist/olExtent.js
+https://unpkg.com/ol-extent@1.1.3/dist/css/olExtent.css
+https://unpkg.com/ol-extent@1.1.3/dist/css/olExtent.min.css
 ```
 
 ### 单控件使用
@@ -27,10 +27,10 @@ https://unpkg.com/ol-extent@1.1.2/dist/css/olExtent.min.css
 > 按功能模块名称引用
 
 ```bash
-https://unpkg.com/ol-extent@1.1.2/dist/[功能模块名称].min.js
-https://unpkg.com/ol-extent@1.1.2/dist/[功能模块名称].js
-https://unpkg.com/ol-extent@1.1.2/dist/css/[功能模块名称].css
-https://unpkg.com/ol-extent@1.1.2/dist/css/[功能模块名称].min.css
+https://unpkg.com/ol-extent@1.1.3/dist/[功能模块名称].min.js
+https://unpkg.com/ol-extent@1.1.3/dist/[功能模块名称].js
+https://unpkg.com/ol-extent@1.1.3/dist/css/[功能模块名称].css
+https://unpkg.com/ol-extent@1.1.3/dist/css/[功能模块名称].min.css
 ```
 
 ### NPM

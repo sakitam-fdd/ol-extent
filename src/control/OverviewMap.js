@@ -3,10 +3,9 @@
  * @desc 自定义鹰眼控件
  */
 import '../asset/scss/overviewMap.scss'
-import {BASE_CLASS_NAME} from '../constants'
+import {BASE_CLASS_NAME, OVERVIEWMAP} from '../constants'
 import * as htmlUtils from 'nature-dom-util/src/utils/domUtils'
 import * as Events from 'nature-dom-util/src/events/Events'
-import {replaceNode} from '../utils/utils'
 ol.control.OverviewMapH = function (options = {}) {
   /**
    * @type {boolean}
@@ -31,6 +30,16 @@ ol.control.OverviewMapH = function (options = {}) {
    * @private
    */
   this.ovmapDiv_ = htmlUtils.create('div', 'hmap-overview-map-target', element)
+
+  /**
+   * 收起按钮
+   * @type {Element}
+   * @private
+   */
+  if (this.collapsible_) {
+    this.collapsElement_ = htmlUtils.create('div', 'hmap-overview-map-button', element)
+    Events.listen(this.collapsElement_, 'click', this.handleClick_, this)
+  }
 
   /**
    * @type {ol.Map}
@@ -71,8 +80,7 @@ ol.control.OverviewMapH.prototype.addOptionLayers_ = function (options) {
  * @param mousePosition
  * @returns {{clientX: number, clientY: *}}
  */
-ol.control.OverviewMapH.computeDesiredMousePosition = function (mousePosition) {
-  const overlayBox = this.boxOverlay_.getElement()
+ol.control.OverviewMapH.computeDesiredMousePosition = function (mousePosition, overlayBox) {
   return {
     clientX: mousePosition.clientX - (overlayBox.offsetWidth / 2),
     clientY: mousePosition.clientY + (overlayBox.offsetHeight / 2)
@@ -84,7 +92,8 @@ ol.control.OverviewMapH.computeDesiredMousePosition = function (mousePosition) {
  * @private
  */
 ol.control.OverviewMapH.prototype.move_ = function (event) {
-  let coordinates = this.ovmap_.getEventCoordinate(ol.control.OverviewMapH.computeDesiredMousePosition(event))
+  const overlayBox = this.boxOverlay_.getElement()
+  let coordinates = this.ovmap_.getEventCoordinate(ol.control.OverviewMapH.computeDesiredMousePosition(event, overlayBox))
   this.boxOverlay_.setPosition(coordinates)
 }
 
@@ -174,7 +183,7 @@ ol.control.OverviewMapH.prototype.isDef = function (view) {
  */
 ol.control.OverviewMapH.prototype.handleMapPropertyChange_ = function (event) {
   if (event.key === 'view') {
-    let oldView = /** @type {ol.View} */ (event.oldValue)
+    let oldView = (event.oldValue)
     if (oldView) {
       this.unbindView_(oldView)
     }
@@ -239,10 +248,10 @@ ol.control.OverviewMapH.prototype.validateExtent_ = function () {
   let boxHeight = Math.abs(topLeftPixel[1] - bottomRightPixel[1])
   let ovmapWidth = ovmapSize[0]
   let ovmapHeight = ovmapSize[1]
-  if (boxWidth < ovmapWidth * ol.OVERVIEWMAP_MIN_RATIO ||
-    boxHeight < ovmapHeight * ol.OVERVIEWMAP_MIN_RATIO ||
-    boxWidth > ovmapWidth * ol.OVERVIEWMAP_MAX_RATIO ||
-    boxHeight > ovmapHeight * ol.OVERVIEWMAP_MAX_RATIO) {
+  if (boxWidth < ovmapWidth * OVERVIEWMAP.MIN_RATIO ||
+    boxHeight < ovmapHeight * OVERVIEWMAP.MIN_RATIO ||
+    boxWidth > ovmapWidth * OVERVIEWMAP.MAX_RATIO ||
+    boxHeight > ovmapHeight * OVERVIEWMAP.MAX_RATIO) {
     this.resetExtent_()
   } else if (!ol.extent.containsExtent(ovextent, extent)) {
     this.recenter_()
@@ -254,7 +263,7 @@ ol.control.OverviewMapH.prototype.validateExtent_ = function () {
  * @private
  */
 ol.control.OverviewMapH.prototype.resetExtent_ = function () {
-  if (ol.OVERVIEWMAP_MAX_RATIO === 0 || ol.OVERVIEWMAP_MIN_RATIO === 0) {
+  if (OVERVIEWMAP.MAX_RATIO === 0 || OVERVIEWMAP.MIN_RATIO === 0) {
     return
   }
   let map = this.getMap()
@@ -264,8 +273,8 @@ ol.control.OverviewMapH.prototype.resetExtent_ = function () {
   let extent = view.calculateExtent(mapSize)
   let ovview = ovmap.getView()
   let steps = Math.log(
-      ol.OVERVIEWMAP_MAX_RATIO / ol.OVERVIEWMAP_MIN_RATIO) / Math.LN2
-  let ratio = 1 / (Math.pow(2, steps / 2) * ol.OVERVIEWMAP_MIN_RATIO)
+      OVERVIEWMAP.MAX_RATIO / OVERVIEWMAP.MIN_RATIO) / Math.LN2
+  let ratio = 1 / (Math.pow(2, steps / 2) * OVERVIEWMAP.MIN_RATIO)
   this.scaleFromCenter(extent, ratio)
   ovview.fit(extent)
 }
@@ -358,20 +367,22 @@ ol.control.OverviewMapH.prototype.handleClick_ = function (event) {
  * @private
  */
 ol.control.OverviewMapH.prototype.handleToggle_ = function () {
-  this.element.classList.toggle('ol-collapsed')
   if (this.collapsed_) {
-    replaceNode(this.collapseLabel_, this.label_)
+    this.collapsed_ = false
+    event.target.style.backgroundPosition = '-40px -405px'
+    this.element.style.width = '17px'
+    this.element.style.height = '17px'
   } else {
-    replaceNode(this.label_, this.collapseLabel_)
+    this.collapsed_ = true
+    event.target.style.backgroundPosition = '-40px -386px'
+    this.element.style.width = '120px'
+    this.element.style.height = '120px'
   }
-  this.collapsed_ = !this.collapsed_
   let ovmap = this.ovmap_
   if (!this.collapsed_ && !ovmap) {
     ovmap.updateSize()
     this.resetExtent_()
-    Events.listenOnce(ovmap, 'postrender', function (event) {
-      this.updateBox_()
-    }, this)
+    Events.listenOnce(ovmap, 'postrender', this.updateBox_, this)
   }
 }
 
@@ -392,7 +403,6 @@ ol.control.OverviewMapH.prototype.setCollapsible = function (collapsible) {
     return
   }
   this.collapsible_ = collapsible
-  this.element.classList.toggle('ol-uncollapsible')
   if (!collapsible && this.collapsed_) {
     this.handleToggle_()
   }

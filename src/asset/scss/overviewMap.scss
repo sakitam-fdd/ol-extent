@@ -8,6 +8,7 @@
   background: #fff;
   border-top: solid 1px #ccc;
   border-left: solid 1px #ccc;
+  transition: all 0.3s;
 }
 
 .hmap-overview-map .hmap-overview-main {
@@ -31,28 +32,33 @@
   display: inline-block;
 }
 .hmap-overview-map .hmap-overview-map-target {
-  border: 1px solid #7b98bc;
-  height: 150px;
-  margin: 2px;
-  width: 150px;
-}
-.hmap-overview-map:not(.ol-collapsed) button{
-  bottom: 1px;
-  left: 2px;
   position: absolute;
-}
-.hmap-overview-map.ol-collapsed .hmap-overview-map-target,
-.hmap-overview-map.ol-uncollapsible button {
-  display: none;
-}
-.hmap-overview-map:not(.ol-collapsed) {
-  background: rgba(255,255,255,0.8);
-}
-.hmap-overview-map-box {
-  box-sizing: border-box;
-  border: 2px dotted rgba(0,60,136,0.7);
+  left: 5px;
+  top: 5px;
+  overflow: hidden;
+  width: 115px;
+  height: 115px;
+  border-top: solid 1px #ccc;
+  border-left: solid 1px #ccc;
 }
 
-.hmap-overview-map .hmap-overview-map-box:hover {
+.hmap-overview-map:not(.overview-collapsed) .hmap-overview-map-button{
+  width: 17px;
+  height: 17px;
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  background: url(../images/mapcontrols.png) -40px -386px;
+  cursor: pointer;
+  background-position: -40px -386px;
+}
+
+.hmap-overview-map .hmap-overview-map-box {
+  width: 62px;
+  height: 35px;
+  background: rgba(27,157,232, 0.5);
+  opacity: .5;
+  border: 2px solid red;
+  filter: alpha(opacity=25);
   cursor: move;
 }
