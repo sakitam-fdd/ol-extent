@@ -33,6 +33,13 @@ https://unpkg.com/ol-extent@1.1.3/dist/css/[功能模块名称].css
 https://unpkg.com/ol-extent@1.1.3/dist/css/[功能模块名称].min.css
 ```
 
+### NPM
+
+```bash
+npm install ol-extent --save
+import olExtent 'ol-extent'
+```
+
 ### 模块列表
 
 #### 控件
@@ -100,13 +107,6 @@ https://unpkg.com/ol-extent@1.1.3/dist/css/[功能模块名称].min.css
 | --- | --- | --- | --- |
 | Geofence | 电子围栏（功能待完善） | `olToolsGeofence` | `olToolsGeofence` or `ol.tools.Geofence` |
 | PrintfMap | 地图打印 | `olToolsPrintfMap` | `olToolsPrintfMap` or `ol.tools.PrintfMap` |
-
-### NPM
-
-```bash
-npm install ol-extent --save
-import olExtent 'ol-extent'
-```
 
 ## Examples
 
