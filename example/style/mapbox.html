@@ -14,38 +14,182 @@
 </head>
 <body>
 <div id="map"></div>
-<script src="../../node_modules/openlayers/dist/ol.js"></script>
+<script src="../../node_modules/openlayers/dist/ol-debug.js"></script>
 <script src="../../dist/olStyleMapBoxStyle.js"></script>
+<script src="../asset/scripts/axios/axios.min.js"></script>
+<script src="./sprite.js"></script>
 <script>
+  var $BaseUrl = 'https://api.mapbox.com/styles/v1/mapbox/dark-v9';
+  var $key = 'pk.eyJ1Ijoic21pbGVmZGQiLCJhIjoiY2owbDBkb2RwMDJyMTMycWRoeDE4d21sZSJ9.dWlPeAWsgnhUKdv1dCLTnw';
+  var $StyleUrl = $BaseUrl + '?access_token=' + $key;
   var $Map = new ol.Map({
     target: 'map',
     layers: [
-      new ol.layer.VectorTile({
-        renderBuffer: 100,
-        renderMode: 'hybrid', // 渲染方式image，hybrid，vector，性能由高到低
-        preload: 0,
-        source: new ol.source.VectorTile({
-          format: new ol.format.MVT(),
-          projection: 'EPSG:3857',
-          overlaps: true,
-          /* eslint new-cap: ["error", { "newIsCap": false }] */
-          tileGrid: new ol.tilegrid.createXYZ({
-            extent: ol.proj.get('EPSG:3857').getExtent(),
-            tileSize: 256,
-            minZoom: 0,
-            maxZoom: 22
-          }),
-          url: 'https://{a-d}.tiles.mapbox.com/v4/mapbox.mapbox-streets-v6/{z}/{x}/{y}.vector.pbf?access_token=pk.eyJ1Ijoic21pbGVmZGQiLCJhIjoiY2owbDBkb2RwMDJyMTMycWRoeDE4d21sZSJ9.dWlPeAWsgnhUKdv1dCLTnw',
-          wrapX: false
-        }),
-        style: new ol.style.MapBoxStyle('https://api.mapbox.com/styles/v1/mapbox/dark-v9?access_token=pk.eyJ1Ijoic21pbGVmZGQiLCJhIjoiY2owbDBkb2RwMDJyMTMycWRoeDE4d21sZSJ9.dWlPeAWsgnhUKdv1dCLTnw')
-      })
+
     ],
     view: new ol.View({
       center: ol.proj.fromLonLat([113.534501, 34.441045]),
       zoom: 4
     })
-  })
+  });
+  var layer = new ol.layer.VectorTile({
+    renderBuffer: 100,
+    renderMode: 'hybrid', // 渲染方式image，hybrid，vector，性能由高到低
+    preload: 0,
+    source: new ol.source.VectorTile({
+      format: new ol.format.MVT(),
+      projection: 'EPSG:3857',
+      overlaps: true,
+      /* eslint new-cap: ["error", { "newIsCap": false }] */
+      tileGrid: new ol.tilegrid.createXYZ({
+        extent: ol.proj.get('EPSG:3857').getExtent(),
+        tileSize: 256,
+        minZoom: 0,
+        maxZoom: 22
+      }),
+      url: 'https://{a-d}.tiles.mapbox.com/v4/mapbox.mapbox-streets-v6/{z}/{x}/{y}.vector.pbf?access_token=pk.eyJ1Ijoic21pbGVmZGQiLCJhIjoiY2owbDBkb2RwMDJyMTMycWRoeDE4d21sZSJ9.dWlPeAWsgnhUKdv1dCLTnw',
+      wrapX: false
+    })
+  });
+  var layerIds = [], SourceId;
+  var spriteRegEx = /^(.*)(\?.*)$/, $Path = '', $Host = '';
+  function apply(style) {
+    var accessToken, baseUrl;
+    if (typeof style === 'string') {
+      var parts = style.match(spriteRegEx);
+      if (parts) {
+        baseUrl = parts[1];
+        accessToken = parts.length > 2 ? parts[2] : '';
+      }
+      axios.get(style)
+        .then(function (response) {
+          var glStyle = response['data'];
+          var a = document.createElement('A');
+          a.href = glStyle;
+          $Path = a.pathname.split('/').slice(0, -1).join('/') + '/';
+          $Host = $StyleUrl.substr(0, $StyleUrl.indexOf($Path));
+          if (glStyle.sprite) {
+            if (glStyle.sprite.indexOf('mapbox://') === 0) {
+              glStyle.sprite = baseUrl + '/sprite' + accessToken;
+            } else if (glStyle.sprite.indexOf('http') !== 0) {
+              glStyle.sprite = $Host + $Path + glStyle.sprite + accessToken;
+            }
+          }
+          processStyle(glStyle);
+          loadSpriteData(layer, glStyle, SourceId);
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    } else {
+      processStyle(style);
+    }
+    return map;
+  }
+
+  function getSourceIdByRef (layers, ref) {
+    var sourceId
+    layers.some(function (layer) {
+      if (layer.id === ref) {
+        sourceId = layer.source
+        return true
+      }
+    })
+    return sourceId
+  };
+  function processStyle (style) {
+    if (!style.layers) {
+      throw new Error('数据不完整：' + style)
+    }
+    var layers = style.layers
+    for (var i = 0, ii = layers.length; i < ii; ++i) {
+      var layer = layers[i]
+      if (layer.type === 'background') {
+         setBackground($Map, layer);
+      } else {
+        var id = layer.source || getSourceIdByRef(layers, layer.ref);
+        if (id !== SourceId) {
+          SourceId = id;
+        }
+        layerIds.push(layer.id)
+      }
+    }
+  };
+  function applyBackground (map, glStyle) {
+    glStyle.layers.some(function(l) {
+      if (l.type === 'background') {
+        setBackground(map, l);
+        return true;
+      }
+    });
+  };
+  function setBackground(map, layer) {
+    function updateStyle() {
+      var layout = layer.layout || {};
+      var paint = layer.paint || {};
+      var element = map.getTargetElement();
+      var zoom = map.getView().getZoom();
+      if ('background-color' in paint) {
+        element.style.backgroundColor =
+          olStyleMapBoxStyle.mapboxGlFunction(paint['background-color'], {function: 'piecewise-constant'})(zoom);
+      }
+      if ('background-opacity' in paint) {
+        element.style.backgroundOpacity =
+          olStyleMapBoxStyle.mapboxGlFunction(paint['background-opacity'], {function: 'interpolated'})(zoom);
+      }
+      if (layout.visibility === 'none') {
+        element.style.backgroundColor = '';
+        element.style.backgroundOpacity = '';
+      }
+    }
+    if (map.getTargetElement()) {
+      updateStyle();
+    }
+    map.on(['change:resolution', 'change:target'], updateStyle);
+  };
+  /**
+   * 处理链接
+   * @param url
+   * @param path
+   * @returns {*}
+   */
+  function withPath (url, path) {
+    if (path && url.indexOf('http') !== 0) {
+      url = path + url
+    }
+    return url
+  }
+
+  /**
+   * 转换雪碧图url
+   * @param url
+   * @param path
+   * @param extension
+   * @returns {string}
+   */
+  function toSpriteUrl (url, path, extension) {
+    url = withPath(url, path)
+    var parts = url.match(spriteRegEx)
+    return parts ? parts[1] + extension + (parts.length > 2 ? parts[2] : '')
+      : url + extension
+  };
+
+  function loadSpriteData (layer, style, layerIds) {
+    var spriteScale = window.devicePixelRatio >= 1.5 ? 0.5 : 1;
+    var sizeFactor = spriteScale === 0.5 ? '@2x' : '';
+    var spriteUrl = toSpriteUrl(style.sprite, $Path, sizeFactor + '.json');
+    var spriteImageUrl = toSpriteUrl(style.sprite, $Path, sizeFactor + '.png');
+    axios.get(spriteUrl)
+      .then(function (response) {
+        var spriteData = response['data'];
+        olStyleMapBoxStyle(layer, style, layerIds, undefined, spriteData, spriteImageUrl, undefined);
+        $Map.addLayer(layer);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  };
+  apply($StyleUrl);
 </script>
 </body>
 </html>
