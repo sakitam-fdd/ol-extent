@@ -250,16 +250,18 @@ ol.control.Loading.prototype.updateLoadStatus_ = function () {
   let groups = this.getMap().getLayers().getArray()
   for (let i = 0; i < groups.length; i++) {
     let layer = groups[i]
-    if (layer instanceof ol.layer.Group) {
-      let layers = layer.getLayers().getArray()
-      for (let j = 0; j < layers.length; j++) {
-        let l = layers[j]
-        if (!(l instanceof ol.layer.Vector)) {
-          loadStatusArray.push(l.getSource().isLoaded)
+    if (layer) {
+      if (layer instanceof ol.layer.Group) {
+        let layers = layer.getLayers().getArray()
+        for (let j = 0; j < layers.length; j++) {
+          let l = layers[j]
+          if (l && l.getSource() && !(l instanceof ol.layer.Vector) && l.getSource().hasOwnProperty('isLoaded')) {
+            loadStatusArray.push(l.getSource().isLoaded)
+          }
         }
+      } else if (layer.getSource() && layer.getSource().hasOwnProperty('isLoaded')) {
+        loadStatusArray.push(layer.getSource().isLoaded)
       }
-    } else {
-      loadStatusArray.push(layer.getSource().isLoaded)
     }
   }
   this.loadStatus_ = (loadStatusArray.indexOf(false) === -1) && (loadStatusArray.indexOf(true) !== -1)
