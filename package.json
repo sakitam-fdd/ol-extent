@@ -28,6 +28,7 @@
     "olSourceBaidu": "src/source/Baidu.js",
     "olSourceGaode": "src/source/Gaode.js",
     "olSourceGoogle": "src/source/Google.js",
+    "olSourceTileDemImage": "src/source/TileDemImage.js",
     "olToolsGeofence": "src/tools/Geofence.js",
     "olExtent": "src/index.js"
   },
