@@ -502,6 +502,52 @@ ol.interaction.FreeHandCircle.prototype._getProjectionCode = function () {
 }
 
 /**
+ * 重新设置半径
+ * @param radius
+ */
+ol.interaction.FreeHandCircle.prototype.setRadius = function (radius) {
+  if (this.circleFeature && this.circleFeature.getGeometry()) {
+    let geom = this.circleFeature.getGeometry()
+    let params = this.transformCenterAndRadius_(this.center_, radius)
+    geom.setCenterAndRadius(params['center'], params['radius'])
+    geom.dispatchEvent('change')
+  } else {
+    throw new Error('未创建Circle实例。')
+  }
+}
+
+/**
+ * 重新设置中心点
+ * @param center
+ */
+ol.interaction.FreeHandCircle.prototype.setCenter = function (center) {
+  if (this.circleFeature && this.circleFeature.getGeometry()) {
+    let geom = this.circleFeature.getGeometry()
+    let params = this.transformCenterAndRadius_(center, this.radius)
+    geom.setCenterAndRadius(params['center'], params['radius'])
+    geom.dispatchEvent('change')
+  } else {
+    throw new Error('未创建Circle实例。')
+  }
+}
+
+/**
+ * 重新设置半径和中心点
+ * @param center
+ * @param radius
+ */
+ol.interaction.FreeHandCircle.prototype.setCenterRadius = function (center, radius) {
+  if (this.circleFeature && this.circleFeature.getGeometry()) {
+    let geom = this.circleFeature.getGeometry()
+    let params = this.transformCenterAndRadius_(center, radius)
+    geom.setCenterAndRadius(params['center'], params['radius'])
+    geom.dispatchEvent('change')
+  } else {
+    throw new Error('未创建Circle实例。')
+  }
+}
+
+/**
  * 设置激活状态
  * @param active
  */

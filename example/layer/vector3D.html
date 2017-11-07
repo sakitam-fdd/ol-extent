@@ -56,6 +56,12 @@
     source: dbpSource
   });
   map.addLayer(dbp);
+  map.on('click', function (event) {
+    var feature = map.forEachFeatureAtPixel(event.pixel, function (fe) {
+      return fe
+    });
+    console.log(feature)
+  })
 
   var renderer3D = new ol.render.render3D({
     height: 200,
@@ -81,8 +87,26 @@
       height:height
     })
   }
+
+  function addModfiy () {
+//    var select = new ol.interaction.Select({
+//      wrapX: false
+//    });
+    var draw = new ol.interaction.Draw({
+      wrapX: false,
+      type: 'Polygon',
+      source: dbpSource
+    })
+//    var modify = new ol.interaction.Modify({
+//      features: select.getFeatures()
+//    });
+//    map.addInteraction(select);
+//    map.addInteraction(modify);
+    map.addInteraction(draw);
+  }
   window.setTimeout(function () {
-    animter()
+    animter();
+//    addModfiy();
   }, 2000)
 </script>
 </body>
