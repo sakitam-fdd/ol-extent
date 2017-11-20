@@ -102,12 +102,12 @@
     ]
   ])
   geom.set('id', '01')
-  var circel = new ol.geom.Circle([1.295722616075553E7, 4865106.159131439], 1000)
-  circel.set('id', '02')
-  geoFence.addGeofence(circel, {
-    duration: 0, // 有效时间，单位毫秒，如小于等于0则表示长期有效
-    dwellDelay: 10000 // 判断停留的延迟，单位毫秒，只有停留超过一定时间才会触发停留事件
-  })
+//  var circel = new ol.geom.Circle([1.295722616075553E7, 4865106.159131439], 1000)
+//  circel.set('id', '02')
+//  geoFence.addGeofence(circel, {
+//    duration: 0, // 有效时间，单位毫秒，如小于等于0则表示长期有效
+//    dwellDelay: 10000 // 判断停留的延迟，单位毫秒，只有停留超过一定时间才会触发停留事件
+//  })
   geoFence.addGeofence(geom, {
     duration: 0, // 有效时间，单位毫秒，如小于等于0则表示长期有效
     dwellDelay: 10000 // 判断停留的延迟，单位毫秒，只有停留超过一定时间才会触发停留事件
@@ -115,11 +115,11 @@
   var feature1 = new ol.Feature({
     geometry: geom
   })
-  var feature2 = new ol.Feature({
-    geometry: circel
-  })
+//  var feature2 = new ol.Feature({
+//    geometry: circel
+//  })
   vector.getSource().addFeature(feature1)
-  vector.getSource().addFeature(feature2)
+//  vector.getSource().addFeature(feature2)
 
   for (var i = 0; i < 100; i++) {
     var point = new ol.Feature({

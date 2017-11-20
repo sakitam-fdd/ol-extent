@@ -4,8 +4,9 @@
  */
 import ol from 'openlayers'
 import Observable from 'observable-emit'
+import getuuid from 'uuid'
 import mixin from '../utils/mixin'
-import {has, getuuid} from '../utils/utils'
+import {has} from '../utils/utils'
 import 'core-js/es6/set'
 if (!has(ol, 'tools')) {
   ol.tools = {}
@@ -53,6 +54,10 @@ ol.tools.Geofence.prototype.queryGeofence = function () {
 }
 
 ol.tools.Geofence.prototype.clear = function () {
+}
+
+ol.tools.Geofence.prototype.creatWatcherInternel = function () {
+  
 }
 
 /**
