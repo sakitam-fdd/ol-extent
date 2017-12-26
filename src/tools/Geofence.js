@@ -57,7 +57,6 @@ ol.tools.Geofence.prototype.clear = function () {
 }
 
 ol.tools.Geofence.prototype.creatWatcherInternel = function () {
-  
 }
 
 /**
