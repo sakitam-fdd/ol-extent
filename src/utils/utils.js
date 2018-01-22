@@ -61,9 +61,41 @@ const replaceNode = (newNode, oldNode) => {
   }
 }
 
+/**
+ * 判断是否为对象
+ * @param value
+ * @returns {boolean}
+ */
+const isObject = value => {
+  const type = typeof value
+  return value !== null && (type === 'object' || type === 'function')
+}
+
+/**
+ * merge
+ * @param target
+ * @returns {*}
+ */
+function merge (target) {
+  for (let i = 1, j = arguments.length; i < j; i++) {
+    let source = arguments[i] || {}
+    for (let prop in source) {
+      if (source.hasOwnProperty(prop)) {
+        let value = source[prop]
+        if (value !== undefined) {
+          target[prop] = value
+        }
+      }
+    }
+  }
+  return target
+}
+
 export {
   has,
   checkBrowser,
   getuuid,
-  replaceNode
+  replaceNode,
+  isObject,
+  merge
 }
