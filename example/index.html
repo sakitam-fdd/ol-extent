@@ -2,9 +2,23 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <title>Title</title>
+  <style>
+    html, body, #map {
+      width: 100%;
+      height: 100%;
+      padding: 0;
+      margin: 0;
+    }
+  </style>
 </head>
 <body>
-
+<script type="text/javascript">
+  var mousemoveHandler = function (event) {
+    console.log(event)
+  }
+  document.addEventListener("pointermove", mousemoveHandler, false);
+</script>
 </body>
 </html>

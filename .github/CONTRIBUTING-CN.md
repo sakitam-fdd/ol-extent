@@ -1,16 +1,18 @@
-# ol-extent贡献指南
+# ol-extent 贡献指南
 
 ## 版本
 
-| 主版本号      | 次版本号                   |  修订号              |
+| 主版本号 | 次版本号 |  修订号 |
 | ------------- | -------------------------- | -------------------- |
-| 破坏性变更    | 功能添加,无破坏性变更      | Bug修正,无破坏性变更 |
+| 破坏性变更    | 功能添加,无破坏性变更  | Bug修正,无破坏性变更 |
 
 ### 版本号递增规则如下：
 
-- 主版本号：当你做了不兼容的 API 修改,
-- 次版本号：当你做了向下兼容的功能性新增,
-- 修订号：当你做了向下兼容的问题修正.
+- 主版本号：当你做了不兼容的 API 修改
+
+- 次版本号：当你做了向下兼容的功能性新增
+
+- 修订号：当你做了向下兼容的问题修正
 
 ## Issue 规范
 
@@ -18,9 +20,10 @@
 
 - 在提交 issue 之前，请搜索相关内容是否已被提出。
 
-- 请说明使用的HMap的版本号，并提供操作系统和浏览器信息。推荐使用 [JSFiddle](https://jsfiddle.net/) 或者[codepen](https://codepen.io/)生成在线 demo，这能够更直观地重现问题。
+- 请说明使用的 `openlayers`的版本号，并提供操作系统和浏览器信息。推荐使用 [JSFiddle](https://jsfiddle.net/) 或者[codepen](https://codepen.io/)生成在线 demo，这能够更直观地重现问题。
 
 ## Pull Request 规范
+
 - 请先 fork 一份到自己的项目下，不要直接在仓库下建分支。
 
 - commit 信息要以# [记录] + messages
@@ -28,7 +31,6 @@
 - **不要提交** `dist` 里面打包的文件。
 
 - 执行 `npm run dev && npm run build` 后可以正确打包文件。
-
 
 - 提交 PR 前请 rebase，确保 commit 记录的整洁。
 
@@ -39,10 +41,13 @@
 
 ## 开发环境搭建
 
-首先你需要 Node.js 4+ 和 NPM 3+
+首先你需要 Node.js 7+ 和 NPM 5+
+
 ```shell
 git clone https://github.com/sakitam-fdd/ol-extent.git
-npm install
+npm install // or yarn
 npm run dev
 npm run build
+npm run karma.test
+npm run karma.cover
 ```
