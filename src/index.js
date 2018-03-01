@@ -1,7 +1,7 @@
 /**
  * Created by FDD on 2017/8/31.
  */
-import olControlLoading from './control/Loading'
+// import olControlLoading from './control/Loading'
 // import olControlBZoomSlider from './control/BZoomSlider'
 // import olControlCompareLayer from './control/compareLayer'
 // import olControlLayerSwitcher from './control/LayerSwitcher'
@@ -15,7 +15,7 @@ import olControlLoading from './control/Loading'
 // import olInteractionFreeHandCircle from './interaction/freeHandCircle'
 // import olStyleFactory from './style/factory'
 // import olLayerUtils from './layer/layerUtils'
-// import olPopover from './overlay/popover'
+import olPopover from './overlay/popover'
 // import olSourceBaidu from './source/Baidu'
 // import olSourceGaode from './source/Gaode'
 // import olSourceGoogle from './source/Google'
@@ -43,5 +43,5 @@ import olControlLoading from './control/Loading'
 // }
 
 export {
-  olControlLoading
+  olPopover
 }

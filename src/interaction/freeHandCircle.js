@@ -7,7 +7,7 @@ import '../asset/scss/freeHandCircle.scss'
 import olStyleFactory from '../style/factory'
 import olLayerLayerUtils from '../layer/layerUtils'
 import Observable from 'observable-emit'
-import {getuuid} from '../utils/utils'
+import {uuid} from '../utils/utils'
 import mixin from '../utils/mixin'
 ol.interaction.FreeHandCircle = function (params) {
   this.options = params || {}
@@ -253,7 +253,7 @@ ol.interaction.FreeHandCircle.prototype.initDrawInteraction = function () {
     type: 'Circle',
     style: style_
   })
-  this.draw.set('uuid', getuuid())
+  this.draw.set('uuid', uuid())
   this.getMap().addInteraction(this.draw)
   this.draw.on('drawstart', this.drawStartHandle_, this)
   this.draw.on('drawend', this.drawEndHandle_, this)
@@ -315,7 +315,7 @@ ol.interaction.FreeHandCircle.prototype.createCircle = function (center, radius)
     this.circleFeature = new ol.Feature({
       geometry: new ol.geom.Circle(params['center'], params['radius'])
     })
-    let uuid = (this.draw && this.draw.get('uuid')) ? this.draw.get('uuid') : getuuid()
+    let uuid = (this.draw && this.draw.get('uuid')) ? this.draw.get('uuid') : uuid()
     this.circleFeature.set('uuid', uuid)
     this.layer.getSource().addFeature(this.circleFeature)
     this.circleFeature.getGeometry().on('change', evt => {

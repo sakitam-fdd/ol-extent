@@ -4,7 +4,7 @@
  */
 import ol from 'openlayers'
 import {BASE_CLASS_NAME} from '../constants'
-import * as htmlUtils from 'nature-dom-util/src/utils/domUtils'
+import {create} from '../utils/domUtils'
 import '../asset/scss/loading.scss'
 ol.control.Loading = function (params) {
   /**
@@ -59,11 +59,11 @@ ol.control.Loading = function (params) {
   let className = (this.options.className !== undefined ? this.options.className : 'hmap-loading-panel')
   // DOM
   let elementDom = (this.widget === 'animatedGif') ? 'span' : 'progress'
-  let element = htmlUtils.create(elementDom, (className + ' ' + BASE_CLASS_NAME.CLASS_UNSELECTABLE))
+  let element = create(elementDom, (className + ' ' + BASE_CLASS_NAME.CLASS_UNSELECTABLE))
   if (this.widget === 'progressBar') {
     // element progress bar for old browsers
-    let div = htmlUtils.create('div', 'hmap-progress-bar')
-    htmlUtils.create('span', '', div)
+    let div = create('div', 'hmap-progress-bar')
+    create('span', '', div)
   }
   this.onCustomStart = (this.options['onStart'] ? this.options['onStart'] : false)
   this.onCustomProgress = (this.options['onProgress'] ? this.options['onProgress'] : false)

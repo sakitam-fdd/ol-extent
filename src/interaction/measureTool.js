@@ -1,7 +1,7 @@
 import ol from 'openlayers'
 import olStyleFactory from '../style/factory'
 import olLayerLayerUtils from '../layer/layerUtils'
-import {getuuid} from '../utils/utils'
+import {uuid} from '../utils/utils'
 import '../asset/scss/measureTool.scss'
 ol.interaction.MeasureTool = function (params) {
   this.options = params || {}
@@ -219,7 +219,7 @@ ol.interaction.MeasureTool.prototype.addDrawInteractions_ = function (type) {
     style: style_,
     freehand: this.freehand
   })
-  this.draw.set('uuid', getuuid())
+  this.draw.set('uuid', uuid())
   this.getMap().addInteraction(this.draw)
   this.draw.on('drawstart', this.drawStartHandle_, this)
   this.draw.on('drawend', this.drawEndHandle_, this)
@@ -236,7 +236,7 @@ ol.interaction.MeasureTool.prototype.addDrawInteractions_ = function (type) {
 ol.interaction.MeasureTool.prototype.drawClickHandle_ = function (event) {
   if (this.drawStart_ && !event.dragging) {
     if (!this.clickCount) {
-      this.clickCount = getuuid()
+      this.clickCount = uuid()
       this.draw.set('measureResult', '起点')
     }
     this.addMeasurecircle(event.coordinate)

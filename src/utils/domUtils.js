@@ -1,7 +1,4 @@
-/* eslint no-useless-escape: "off" */
-const SPECIAL_CHARS_REGEXP = /([\:\-\_]+(.))/g
-const MOZ_HACK_REGEXP = /^moz([A-Z])/
-
+import {stamp, camelCase, trim} from './utils'
 /* istanbul ignore next */
 export const create = function (tagName, className, container, id) {
   let el = document.createElement(tagName)
@@ -48,53 +45,121 @@ export const createHidden = function (tagName, parent, id) {
   return element
 }
 
-/* istanbul ignore next */
-const trim = function (string) {
-  return (string || '').replace(/^[\s\uFEFF]+|[\s\uFEFF]+$/g, '')
+/**
+ * 获取事件唯一标识
+ * @param type
+ * @param fn
+ * @param context
+ * @returns {string}
+ */
+const getDomEventKey = (type, fn, context) => {
+  return '_dom_event_' + type + '_' + stamp(fn) + (context ? '_' + stamp(context) : '')
 }
 
-/* istanbul ignore next */
-const camelCase = function (name) {
-  return name.replace(SPECIAL_CHARS_REGEXP, function (_, separator, letter, offset) {
-    return offset ? letter.toUpperCase() : letter
-  }).replace(MOZ_HACK_REGEXP, 'Moz$1')
+/**
+ * 对DOM对象添加事件监听
+ * @param element
+ * @param type
+ * @param fn
+ * @param context
+ * @param isOnce
+ * @returns {*}
+ */
+export const addListener = function (element, type, fn, context, isOnce) {
+  let eventKey = getDomEventKey(type, fn, context)
+  let handler = element[eventKey]
+  if (handler) {
+    if (!isOnce) {
+      handler.callOnce = false
+    }
+    return this
+  }
+  handler = function (e) {
+    return fn.call(context || element, e)
+  }
+  if ('addEventListener' in element) {
+    element.addEventListener(type, handler, false)
+  } else if ('attachEvent' in element) {
+    element.attachEvent('on' + type, handler)
+  }
+  element[eventKey] = handler
+  return this
 }
 
-/* istanbul ignore next */
-export const on = (function () {
-  if (document.addEventListener) {
-    return function (element, event, handler) {
-      if (element && event && handler) {
-        element.addEventListener(event, handler, false)
-      }
-    }
-  }
-})()
+export const on = addListener
 
-/* istanbul ignore next */
-export const off = (function () {
-  if (document.removeEventListener) {
-    return function (element, event, handler) {
-      if (element && event) {
-        element.removeEventListener(event, handler, false)
-      }
-    }
+/**
+ * 移除DOM对象监听事件
+ * @param element
+ * @param type
+ * @param fn
+ * @param context
+ * @returns {removeListener}
+ */
+export const removeListener = function (element, type, fn, context) {
+  let eventKey = getDomEventKey(type, fn, context)
+  let handler = element[eventKey]
+  if (!handler) {
+    return this
   }
-})()
-
-/* istanbul ignore next */
-export const once = function (el, event, fn) {
-  const listener = function () {
-    if (fn) {
-      fn.apply(this, arguments)
-    }
-    off(el, event, listener)
+  if ('removeEventListener' in element) {
+    element.removeEventListener(type, handler, false)
+  } else if ('detachEvent' in element) {
+    element.detachEvent('on' + type, handler)
   }
-  on(el, event, listener)
+  element[eventKey] = null
+  return this
 }
 
-/* istanbul ignore next */
-export function hasClass (el, cls) {
+export const off = removeListener
+
+/**
+ * attach events once
+ * @param element
+ * @param type
+ * @param fn
+ * @param context
+ * @returns {*}
+ */
+export const once = function (element, type, fn, context) {
+  return addListener(element, type, fn, context, true)
+}
+
+/**
+ * Prevent default behavior of the browser.
+ * @param event
+ * @returns {preventDefault}
+ */
+export const preventDefault = function (event) {
+  if (event.preventDefault) {
+    event.preventDefault()
+  } else {
+    event.returnValue = false
+  }
+  return this
+}
+
+/**
+ * Stop browser event propagation
+ * @param event
+ * @returns {stopPropagation}
+ */
+export const stopPropagation = function (event) {
+  if (event.stopPropagation) {
+    event.stopPropagation()
+  } else {
+    event.cancelBubble = true
+  }
+  return this
+}
+
+/**
+ * check element has class
+ * @param el
+ * @param cls
+ * @returns {boolean}
+ */
+export const hasClass = (el, cls) => {
   if (!el || !cls) return false
   if (cls.indexOf(' ') !== -1) throw new Error('className should not contain space.')
   if (el.classList) {
@@ -104,8 +169,12 @@ export function hasClass (el, cls) {
   }
 }
 
-/* istanbul ignore next */
-export function addClass (el, cls) {
+/**
+ * add class for element
+ * @param el
+ * @param cls
+ */
+export const addClass = (el, cls) => {
   if (!el) return
   let curClass = el.className
   let classes = (cls || '').split(' ')
@@ -123,8 +192,12 @@ export function addClass (el, cls) {
   }
 }
 
-/* istanbul ignore next */
-export function removeClass (el, cls) {
+/**
+ * remove element class
+ * @param el
+ * @param cls
+ */
+export const removeClass = (el, cls) => {
   if (!el || !cls) return
   const classes = cls.split(' ')
   let curClass = ' ' + el.className + ' '
@@ -142,8 +215,13 @@ export function removeClass (el, cls) {
   }
 }
 
-/* istanbul ignore next */
-export function getStyle (element, styleName) {
+/**
+ * get current element style
+ * @param element
+ * @param styleName
+ * @returns {*}
+ */
+export const getStyle = (element, styleName) => {
   if (!element || !styleName) return null
   styleName = camelCase(styleName)
   if (styleName === 'float') {
@@ -157,11 +235,16 @@ export function getStyle (element, styleName) {
   }
 }
 
-/* istanbul ignore next */
-export function setStyle (element, styleName, value) {
+/**
+ * set dom style
+ * @param element
+ * @param styleName
+ * @param value
+ */
+export const setStyle = (element, styleName, value) => {
   if (!element || !styleName) return
   if (typeof styleName === 'object') {
-    for (var prop in styleName) {
+    for (let prop in styleName) {
       if (styleName.hasOwnProperty(prop)) {
         setStyle(element, prop, styleName[prop])
       }

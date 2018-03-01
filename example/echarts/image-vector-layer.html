@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Image Vector Layer</title>
+  <link rel="stylesheet" href="https://openlayers.org/en/v4.6.4/css/ol.css" type="text/css">
+  <link rel="stylesheet" href="../../dist/olExtent.css">
+  <!-- The line below is only needed for old environments like Internet Explorer and Android 4.x -->
+  <script src="https://cdn.polyfill.io/v2/polyfill.min.js?features=requestAnimationFrame,Element.prototype.classList,URL"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jquery/dist/jquery.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/echarts/dist/echarts.js"></script>
+  <script src="https://openlayers.org/en/v4.6.4/build/ol.js"></script>
+  <script src="../../dist/olExtent.js"></script>
+  <style>
+    .chart-content {
+      width: 150px;
+      height: 100px;
+    }
+  </style>
+</head>
+<body>
+<div id="map" class="map"></div>
+<div id="info">&nbsp;</div>
+<script>
+  var style = new ol.style.Style({
+    fill: new ol.style.Fill({
+      color: 'rgba(255, 255, 255, 0.6)'
+    }),
+    stroke: new ol.style.Stroke({
+      color: '#319FD3',
+      width: 1
+    }),
+    text: new ol.style.Text()
+  });
+
+  var map = new ol.Map({
+    layers: [
+      new ol.layer.Vector({
+        renderMode: 'image',
+        source: new ol.source.Vector({
+          url: 'https://openlayers.org/en/v4.6.4/examples/data/geojson/countries.geojson',
+          format: new ol.format.GeoJSON()
+        }),
+        style: function(feature) {
+          style.getText().setText(feature.get('name'));
+          return style;
+        }
+      })
+    ],
+    target: 'map',
+    view: new ol.View({
+      center: [0, 0],
+      zoom: 1
+    })
+  });
+
+  var featureOverlay = new ol.layer.Vector({
+    source: new ol.source.Vector(),
+    map: map,
+    style: new ol.style.Style({
+      stroke: new ol.style.Stroke({
+        color: '#f00',
+        width: 1
+      }),
+      fill: new ol.style.Fill({
+        color: 'rgba(255,0,0,0.1)'
+      })
+    })
+  });
+
+  var highlight, chart;
+  var option = {
+    xAxis: {
+      type: 'category',
+      data: ['鲜花', '星星', '香蕉', '嫌弃']
+    },
+    yAxis: {
+      type: 'value'
+    },
+    series: [{
+      data: [120, 200, 150, 80],
+      type: 'bar',
+      //配置样式
+      itemStyle: {
+        //通常情况下：
+        normal:{
+          //每个柱子的颜色即为colorList数组里的每一项，如果柱子数目多于colorList的长度，则柱子颜色循环使用该数组
+          color: function (params){
+            var colorList = ['rgb(164,205,238)','rgb(42,170,227)','rgb(25,46,94)','rgb(195,229,235)'];
+            return colorList[params.dataIndex];
+          }
+        },
+        //鼠标悬停时：
+        emphasis: {
+          shadowBlur: 10,
+          shadowOffsetX: 0,
+          shadowColor: 'rgba(0, 0, 0, 0.5)'
+        }
+      },
+      //设置柱子的宽度
+      // barWidth : 120,
+    }]
+  };
+  var showBar = function (feature, coordinate) {
+    var content = document.createElement('div');
+    content.className = 'chart-content';
+    content.style.width = '150px';
+    content.style.height = '100px';
+    document.body.appendChild(content);
+    if (!chart) {
+      chart = echarts.init(content);
+      chart.setOption(option, false);
+    } else {
+      chart.setOption(option, false);
+    }
+    popup.show(coordinate, content);
+  };
+  var displayFeatureInfo = function(pixel) {
+    var feature = map.forEachFeatureAtPixel(pixel, function(feature) {
+      return feature;
+    });
+    var info = document.getElementById('info');
+    if (feature) {
+      showBar(feature, map.getCoordinateFromPixel(pixel));
+      info.innerHTML = feature.getId() + ': ' + feature.get('name');
+    } else {
+      popup.hide()
+      info.innerHTML = '&nbsp;';
+    }
+    if (feature !== highlight) {
+      if (highlight) {
+        featureOverlay.getSource().removeFeature(highlight);
+      }
+      if (feature) {
+        featureOverlay.getSource().addFeature(feature);
+      }
+      highlight = feature;
+    }
+  };
+  var popup
+  map.on('pointermove', function(evt) {
+    if (evt.dragging) {
+      return;
+    }
+    if (!popup) {
+      popup = new ol.Popover(map, {
+        showCloser: false,
+        showMarkFeature: false,
+        showMinimize: false,
+        offset: [0, -5]
+      })
+      map.addOverlay(popup);
+    }
+    var pixel = map.getEventPixel(evt.originalEvent);
+    displayFeatureInfo(pixel);
+  });
+
+  map.on('click', function(evt) {
+    displayFeatureInfo(evt.pixel);
+  });
+</script>
+</body>
+</html>
