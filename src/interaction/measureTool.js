@@ -2,7 +2,7 @@ import ol from 'openlayers'
 import olStyleFactory from '../style/factory'
 import olLayerLayerUtils from '../layer/layerUtils'
 import {uuid} from '../utils/utils'
-import '../asset/scss/measureTool.scss'
+import '../assets/scss/measureTool.scss'
 ol.interaction.MeasureTool = function (params) {
   this.options = params || {}
 

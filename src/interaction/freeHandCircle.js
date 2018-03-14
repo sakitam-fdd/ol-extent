@@ -3,7 +3,7 @@
  * @desc 动态圆，主要用于周边搜索功能
  */
 import ol from 'openlayers'
-import '../asset/scss/freeHandCircle.scss'
+import '../assets/scss/freeHandCircle.scss'
 import olStyleFactory from '../style/factory'
 import olLayerLayerUtils from '../layer/layerUtils'
 import Observable from 'observable-emit'

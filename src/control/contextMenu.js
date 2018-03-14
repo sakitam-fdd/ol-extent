@@ -3,11 +3,10 @@
  * @desc 右键功能(迁移自项目扩展)
  */
 import ol from 'openlayers'
-import '../asset/scss/contextMenu.scss'
 import {BASE_CLASS_NAME} from '../constants'
-import * as htmlUtils from 'nature-dom-util/src/utils/domUtils'
-import * as Events from 'nature-dom-util/src/events/Events'
-import Observable from 'observable-emit'
+import * as htmlUtils from '../utils/dom'
+import * as Events from '../utils/events'
+import Observable from '../utils/Observable'
 import mixin from '../utils/mixin'
 import cloneDeep from 'lodash/cloneDeep'
 ol.control.ContextMenu = function (params = {}) {
@@ -130,7 +129,6 @@ ol.control.ContextMenu.prototype.hide = function () {
  * @returns {*}
  */
 ol.control.ContextMenu.prototype.htmlUtils = function (items, index, content, isOffset) {
-  let that = this
   let ulList = null
   if (items && Array.isArray(items) && items.length > 0) {
     ulList = htmlUtils.create('ul', this.className_ + '-ul' + index + '-inner', content, this.className_ + '-ul' + index + '-inner')
@@ -147,9 +145,7 @@ ol.control.ContextMenu.prototype.htmlUtils = function (items, index, content, is
         li_.style.height = this.itemHeight + 'px'
         li_.style.lineHeight = this.itemHeight + 'px'
         li_.setAttribute('data-name', item['alias'])
-        Events.listen(li_, 'click', function (event) {
-          that.handleItemClick_(event, item)
-        }, this)
+        Events.listen(li_, 'click', this.handleItemClick_.bind(this, item))
         if (item['icon']) {
           let span_ = htmlUtils.create('span', 'li-icon-content', li_)
           if (item['iconType'] === 'iconfont') {
@@ -186,7 +182,7 @@ ol.control.ContextMenu.prototype.htmlUtils = function (items, index, content, is
  * @private
  */
 ol.control.ContextMenu.prototype.updateElement_ = function (type, item, items) {
-  let child_ = htmlUtils.get(this.className_ + '-ul' + '-inner')
+  let child_ = htmlUtils.getTarget(this.className_ + '-ul' + '-inner')
   let cloneItems = cloneDeep(this.options['items'])
   let afterItems = null
   switch (type) {
@@ -241,11 +237,12 @@ ol.control.ContextMenu.prototype.getCurrentCoordinates = function () {
 
 /**
  * 处理列表点击事件
- * @param event
  * @param item
+ * @param event
  * @private
  */
-ol.control.ContextMenu.prototype.handleItemClick_ = function (event, item) {
+ol.control.ContextMenu.prototype.handleItemClick_ = function (item, event) {
+  Events.stopPropagation(event)
   if (item && item['callback'] && typeof item['callback'] === 'function') {
     item['callback'](event, {
       source: item,
@@ -269,6 +266,7 @@ ol.control.ContextMenu.prototype.handleItemClick_ = function (event, item) {
  * @private
  */
 ol.control.ContextMenu.prototype.handleItemMouseOver_ = function (event) {
+  Events.stopPropagation(event)
   if (event.target && event.target.childNodes) {
     let elements = Array.prototype.slice.call(event.target.childNodes, 0)
     if (elements && elements.length > 0) {
@@ -290,6 +288,7 @@ ol.control.ContextMenu.prototype.handleItemMouseOver_ = function (event) {
  * @private
  */
 ol.control.ContextMenu.prototype.handleItemMouseOut_ = function (event) {
+  Events.stopPropagation(event)
   if (event.target && event.target.childNodes) {
     let elements = Array.prototype.slice.call(event.target.childNodes, 0)
     if (elements && elements.length > 0) {

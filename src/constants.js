@@ -1,8 +1,3 @@
-/**
- * Created by FDD on 2017/8/29.
- * @desc 相关静态常量
- */
-
 const BASE_CLASS_NAME = {
   CLASS_HIDDEN: 'hmap-hidden',
   CLASS_SELECTABLE: 'hmap-selectable',

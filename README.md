@@ -32,20 +32,20 @@ npm run karma.cover
 ### CDN
 
 current you can use 
-* [unpkg.com](https://unpkg.com/ol-extent/dist/olExtent.js) / 
-* [jsdelivr](https://cdn.jsdelivr.net/npm/ol-extent/dist/olExtent.js) get the latest version of the resource。
+* [unpkg.com](https://unpkg.com/ol-extent/dist/ol-extent.js) / 
+* [jsdelivr](https://cdn.jsdelivr.net/npm/ol-extent/dist/ol-extent.js) get the latest version of the resource。
 
 ```bash
 // jsdelivr (It is best to lock the version number for cache reasons)
-https://cdn.jsdelivr.net/npm/ol-extent/dist/olExtent.js
-https://cdn.jsdelivr.net/npm/ol-extent/dist/olExtent.css
-https://cdn.jsdelivr.net/npm/ol-extent/dist/olExtent.min.js
-https://cdn.jsdelivr.net/npm/ol-extent/dist/olExtent.min.css
+https://cdn.jsdelivr.net/npm/ol-extent/dist/ol-extent.js
+https://cdn.jsdelivr.net/npm/ol-extent/dist/ol-extent.css
+https://cdn.jsdelivr.net/npm/ol-extent/dist/ol-extent.min.js
+https://cdn.jsdelivr.net/npm/ol-extent/dist/ol-extent.min.css
 // npm
-https://unpkg.com/ol-extent/dist/olExtent.js
-https://unpkg.com/ol-extent/dist/olExtent.css
-https://unpkg.com/ol-extent/dist/olExtent.min.js
-https://unpkg.com/ol-extent/dist/olExtent.min.css
+https://unpkg.com/ol-extent/dist/ol-extent.js
+https://unpkg.com/ol-extent/dist/ol-extent.css
+https://unpkg.com/ol-extent/dist/ol-extent.min.js
+https://unpkg.com/ol-extent/dist/ol-extent.min.css
 ```
 
 ### NPM

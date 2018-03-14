@@ -4,9 +4,12 @@ config/
 docs/
 node_modules/
 test/
+package-lock.json
 .editorconfig
 .babelrc
 coverage/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+.idea/
+yarn.lock

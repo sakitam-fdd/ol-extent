@@ -2,10 +2,10 @@
  * Created by FDD on 2017/10/12.
  * @desc 自定义鹰眼控件
  */
-import '../asset/scss/overviewMap.scss'
+import ol from 'openlayers'
 import {BASE_CLASS_NAME, OVERVIEWMAP} from '../constants'
-import * as htmlUtils from 'nature-dom-util/src/utils/domUtils'
-import * as Events from 'nature-dom-util/src/events/Events'
+import * as htmlUtils from '../utils/dom'
+import * as Events from '../utils/events'
 ol.control.OverviewMapH = function (options = {}) {
   /**
    * @type {boolean}
@@ -272,8 +272,7 @@ ol.control.OverviewMapH.prototype.resetExtent_ = function () {
   let view = map.getView()
   let extent = view.calculateExtent(mapSize)
   let ovview = ovmap.getView()
-  let steps = Math.log(
-      OVERVIEWMAP.MAX_RATIO / OVERVIEWMAP.MIN_RATIO) / Math.LN2
+  let steps = Math.log(OVERVIEWMAP.MAX_RATIO / OVERVIEWMAP.MIN_RATIO) / Math.LN2
   let ratio = 1 / (Math.pow(2, steps / 2) * OVERVIEWMAP.MIN_RATIO)
   this.scaleFromCenter(extent, ratio)
   ovview.fit(extent)

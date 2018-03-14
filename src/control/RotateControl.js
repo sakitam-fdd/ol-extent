@@ -3,10 +3,9 @@
  * @desc 视图旋转控制器
  */
 import ol from 'openlayers'
-import '../asset/scss/rotate.scss'
 import {BASE_CLASS_NAME} from '../constants'
-import * as htmlUtils from 'nature-dom-util/src/utils/domUtils'
-import * as Events from 'nature-dom-util/src/events/Events'
+import * as htmlUtils from '../utils/dom'
+import * as Events from '../utils/events'
 ol.control.RotateControl = function (params = {}) {
   this.className = params.className !== undefined ? params.className : 'hmap-rotate-control'
 

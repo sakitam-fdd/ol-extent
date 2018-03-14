@@ -1,41 +1,55 @@
 // Config file for running Rollup in "normal" mode (non-watch)
-
-const path = require('path');
 const babel = require('rollup-plugin-babel'); // ES2015 tran
+const json = require('rollup-plugin-json');
 const cjs = require('rollup-plugin-commonjs');
 const nodeResolve = require('rollup-plugin-node-resolve');
 const replace = require('rollup-plugin-replace');
 const eslint = require('rollup-plugin-eslint');
+const copy = require('rollup-plugin-copied');
 const friendlyFormatter = require('eslint-friendly-formatter');
-const scss = require('rollup-plugin-scss');
-const _package = require('../package.json')
-const eslintConfig = require('../.eslintrc')
-const year = new Date().getFullYear();
-const banner = `/*!\n * ${_package.name} v${_package.version}\n * LICENSE : ${_package.license}\n * (c) 2017-${year} ${_package.homepage}\n */`;
-
-const resolve = _path => path.resolve(__dirname, '../', _path)
-
+const _package = require('../package.json');
+const { handleMinEsm, resolve } = require('./helper');
+const eslintConfig = require('../.eslintrc');
+const time = new Date();
+const year = time.getFullYear();
+const banner = `/*!\n * author: ${_package.author} 
+ * ${_package.name} v${_package.version}
+ * build-time: ${year}-${time.getMonth()}-${time.getDay()} ${time.getHours()}:${time.getMinutes()}
+ * LICENSE: ${_package.license}
+ * (c) 2017-${year} ${_package.homepage}\n */`;
 const genConfig = (opts) => {
   const config = {
     input: {
       input: resolve('src/index.js'),
       plugins: [
-        scss({
-          output: resolve(_package.style)
+        json({
+          include: resolve('package.json'),
+          indent: ' '
         }),
         eslint(Object.assign({}, eslintConfig, {
           formatter: friendlyFormatter,
-          exclude: [resolve('node_modules'), resolve('src/asset')]
+          exclude: [
+            resolve('package.json'),
+            resolve('node_modules/**'),
+            resolve('src/assets/**')]
         })),
         babel({
-          exclude: resolve('node_modules') // only transpile our source code
+          exclude: [
+            resolve('package.json'),
+            resolve('node_modules/**')
+          ] // only transpile our source code
         }),
         nodeResolve({
           jsnext: true,
           main: true,
           browser: true
         }),
-        cjs()
+        cjs(),
+        copy({
+          from: resolve('src/assets/images'),
+          to: resolve('dist/images'),
+          emitFiles: true // defaults to true
+        })
       ],
       external: ['openlayers']
     },
@@ -43,10 +57,10 @@ const genConfig = (opts) => {
       file: opts.file,
       format: opts.format,
       banner,
-      name: _package.namespace,
       globals: {
         openlayers: 'ol'
-      }
+      },
+      name: _package.namespace
     }
   }
   if (opts.env) {
@@ -55,24 +69,7 @@ const genConfig = (opts) => {
     }))
   }
   return config
-}
-
-const handleMinEsm = name => {
-  if (typeof name === 'string') {
-    let arr_ = name.split('.')
-    let arrTemp = []
-    arr_.forEach((item, index) => {
-      if (index < arr_.length - 1) {
-        arrTemp.push(item)
-      } else {
-        arrTemp.push('min')
-        arrTemp.push(item)
-      }
-    })
-    return arrTemp.join('.')
-  }
-}
-
+};
 module.exports = [
   {
     file: resolve(_package.unpkg),

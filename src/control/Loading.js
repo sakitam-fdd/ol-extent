@@ -4,8 +4,7 @@
  */
 import ol from 'openlayers'
 import {BASE_CLASS_NAME} from '../constants'
-import {create} from '../utils/domUtils'
-import '../asset/scss/loading.scss'
+import * as htmlUtils from '../utils/dom'
 ol.control.Loading = function (params) {
   /**
    * 当前配置
@@ -59,11 +58,11 @@ ol.control.Loading = function (params) {
   let className = (this.options.className !== undefined ? this.options.className : 'hmap-loading-panel')
   // DOM
   let elementDom = (this.widget === 'animatedGif') ? 'span' : 'progress'
-  let element = create(elementDom, (className + ' ' + BASE_CLASS_NAME.CLASS_UNSELECTABLE))
+  let element = htmlUtils.create(elementDom, (className + ' ' + BASE_CLASS_NAME.CLASS_UNSELECTABLE))
   if (this.widget === 'progressBar') {
     // element progress bar for old browsers
-    let div = create('div', 'hmap-progress-bar')
-    create('span', '', div)
+    let div = htmlUtils.create('div', 'hmap-progress-bar')
+    htmlUtils.create('span', '', div)
   }
   this.onCustomStart = (this.options['onStart'] ? this.options['onStart'] : false)
   this.onCustomProgress = (this.options['onProgress'] ? this.options['onProgress'] : false)
@@ -116,6 +115,7 @@ ol.control.Loading.prototype.setup = function () {
  */
 ol.control.Loading.prototype.setDomPosition = function () {
   let size = this.getMap().getSize()
+  if (!size) return
   let domSize = [this.element.clientWidth, this.element.clientHeight]
   this.element.style.left = String(Math.round((size[0] - domSize[0]) / 2)) + 'px'
   this.element.style.bottom = String(Math.round((size[1] - domSize[1]) / 2)) + 'px'

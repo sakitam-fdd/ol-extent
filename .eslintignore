@@ -1,4 +1,5 @@
 build/*.js
 config/*.js
+dist/*.js
+example/
 test/**/*.js
-dist/

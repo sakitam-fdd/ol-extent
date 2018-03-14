@@ -3,11 +3,10 @@
  * @ 图层切换功能控件
  */
 import ol from 'openlayers'
-import '../asset/scss/layerSwitcher.scss'
 import {BASE_CLASS_NAME} from '../constants'
-import * as htmlUtils from 'nature-dom-util/src/utils/domUtils'
-import * as Events from 'nature-dom-util/src/events/Events'
-import olLayerLayerUtils from '../layer/layerUtils'
+import * as htmlUtils from '../utils/dom'
+import * as Events from '../utils/events'
+import olLayerLayerUtils from '../layer/Layer'
 import mixin from '../utils/mixin'
 ol.control.LayerSwitcher = function (params = {}) {
   this.options = params
@@ -168,7 +167,7 @@ ol.control.LayerSwitcher.prototype.contentMouseOver_ = function (event) {
   let length = this.options['layers'].length
   if (length > 0) {
     for (let i = 0; i < length - 1; i++) {
-      let item = htmlUtils.get(this.className_ + '-li' + i + '-inner')
+      let item = htmlUtils.getTarget(this.className_ + '-li' + i + '-inner')
       if (item) {
         item.style.marginRight = '0px'
         item.style.zIndex = ''
@@ -188,7 +187,7 @@ ol.control.LayerSwitcher.prototype.contentMouseOut_ = function (event) {
   let length = this.options['layers'].length
   if (length > 0) {
     for (let i = 0; i < length - 1; i++) {
-      let item = htmlUtils.get(this.className_ + '-li' + i + '-inner')
+      let item = htmlUtils.getTarget(this.className_ + '-li' + i + '-inner')
       if (item) {
         item.style.zIndex = i + 1
         item.style.right = '0px'
@@ -260,7 +259,7 @@ ol.control.LayerSwitcher.prototype.switcher = function (key, value) {
     let length = this.options['layers'].length
     if (length > 0) {
       for (let i = 0; i < length; i++) {
-        let item = htmlUtils.get(this.className_ + '-li' + i + '-inner')
+        let item = htmlUtils.getTarget(this.className_ + '-li' + i + '-inner')
         if (item && item.getAttribute('data-name') === value) {
           htmlUtils.addClass(item, 'selected-item')
         } else {

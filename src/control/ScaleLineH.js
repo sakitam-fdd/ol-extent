@@ -2,10 +2,10 @@
  * Created by FDD on 2017/10/11.
  * @desc 比例尺控件
  */
-import '../asset/scss/ScaleLineH.scss'
+import ol from 'openlayers'
 import {BASE_CLASS_NAME, UNITS} from '../constants'
-import * as htmlUtils from 'nature-dom-util/src/utils/domUtils'
-import * as Events from 'nature-dom-util/src/events/Events'
+import * as htmlUtils from '../utils/dom'
+import * as Events from '../utils/events'
 ol.control.ScaleLineH = function (options = {}) {
   const className = options.className !== undefined ? options.className : 'hmap-scale-line-control'
 
@@ -211,8 +211,7 @@ ol.control.ScaleLineH.prototype.updateElement_ = function () {
     ol.asserts.assert(false, 33) // Invalid units
   }
 
-  let i = 3 * Math.floor(
-      Math.log(this.minWidth_ * pointResolution) / Math.log(10))
+  let i = 3 * Math.floor(Math.log(this.minWidth_ * pointResolution) / Math.log(10))
   let [count, width] = []
   while (true) {
     count = ol.control.ScaleLineH.LEADING_DIGITS[((i % 3) + 3) % 3] * Math.pow(10, Math.floor(i / 3))

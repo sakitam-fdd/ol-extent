@@ -3,11 +3,9 @@
  * @desc 用于图层比较
  */
 import ol from 'openlayers'
-import '../asset/scss/compareLayer'
 import {BASE_CLASS_NAME} from '../constants'
-import * as htmlUtils from 'nature-dom-util/src/utils/domUtils'
-import * as Events from 'nature-dom-util/src/events/Events'
-import 'pepjs'
+import * as htmlUtils from '../utils/dom'
+import * as Events from '../utils/events'
 ol.control.CompareLayer = function (beforeMap, afterMap, params) {
   this.options = params || {}
   if (beforeMap && afterMap) {
@@ -95,7 +93,7 @@ ol.control.CompareLayer.prototype.initControl = function () {
  * @private
  */
 ol.control.CompareLayer.prototype.handleDraggerStart_ = function (event) {
-  if (!this.dragging_ && event.target === htmlUtils.getElementsByClassName('.' + this.className + '-inner', this.element_)) {
+  if (!this.dragging_ && event.target === htmlUtils.getElement('.' + this.className + '-inner', this.element_)[0]) {
     this.previousX_ = event.clientX
     this.previousY_ = event.clientY
     this.dragging_ = true

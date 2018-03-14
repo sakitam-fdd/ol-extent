@@ -3,11 +3,9 @@
  * @desc 全屏控制
  */
 import ol from 'openlayers'
-import '../asset/scss/fullScreen.scss'
 import {BASE_CLASS_NAME} from '../constants'
-import * as htmlUtils from 'nature-dom-util/src/utils/domUtils'
-import * as Events from 'nature-dom-util/src/events/Events'
-import {EventType} from 'nature-dom-util/src/events/EventType'
+import * as htmlUtils from '../utils/dom'
+import * as Events from '../utils/events'
 import screenfull from 'screenfull'
 ol.control.FullScreenMenu = function (params = {}) {
   let options = params
@@ -94,7 +92,7 @@ ol.control.FullScreenMenu.prototype.initDomInternal_ = function (className) {
   let inner = htmlUtils.create('span', className + '-inner', element)
   inner.setAttribute('title', '放大')
   inner.innerHTML = this.label
-  Events.listen(element, EventType.CLICK, this.handleClick_, this)
+  Events.listen(element, 'click', this.handleClick_, this)
   return element
 }
 

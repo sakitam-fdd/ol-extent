@@ -2,10 +2,10 @@
  * Created by FDD on 2017/10/12.
  * @desc 坐标实时拾取
  */
-import '../asset/scss/mousePosition.scss'
+import ol from 'openlayers'
 import {BASE_CLASS_NAME} from '../constants'
-import * as htmlUtils from 'nature-dom-util/src/utils/domUtils'
-import * as Events from 'nature-dom-util/src/events/Events'
+import * as htmlUtils from '../utils/dom'
+import * as Events from '../utils/events'
 ol.control.MousePositionH = function (options = {}) {
   this.className_ = options.className !== undefined ? options.className : 'hmap-mouse-position'
   let element = htmlUtils.create('div', (this.className_ + ' ' + BASE_CLASS_NAME.CLASS_UNSELECTABLE))
