@@ -1,11 +1,11 @@
 /**
  * Created by FDD on 2017/9/19.
- * @desc 缩放按钮
+ * @desc ZoomMenu
  */
-import ol from 'openlayers'
-import {BASE_CLASS_NAME} from '../constants'
-import * as htmlUtils from '../utils/dom'
-import * as Events from '../utils/events'
+import '../assets/scss/zoom.scss'
+import ol from 'openlayers';
+import {BASE_CLASS_NAME} from '../constants';
+import { create, on } from '../utils';
 
 class ZoomMenu extends ol.control.Control {
   constructor (options = {}) {
@@ -20,7 +20,14 @@ class ZoomMenu extends ol.control.Control {
      */
     const delta = options.delta !== undefined ? options.delta : 1;
 
-    const element_ = this.initDomInternal_(className, delta);
+    const element_ = create('div', (className + ' ' + BASE_CLASS_NAME.CLASS_UNSELECTABLE));
+
+    const zoomIn = create('span', 'zoom-in', element_);
+    zoomIn.setAttribute('title', '放大');
+    zoomIn.innerHTML = '+';
+    const zoomOut = create('span', 'zoom-out', element_);
+    zoomOut.setAttribute('title', '缩小');
+    zoomOut.innerHTML = '\u2212';
 
     /**
      * 动画时间
@@ -32,43 +39,47 @@ class ZoomMenu extends ol.control.Control {
       element: element_,
       target: options.target
     });
+
+    /**
+     * set duration
+     */
     this.set('duration', duration_);
+    on(zoomIn, 'click', this.handleClick_.bind(this, delta));
+    on(zoomOut, 'click', this.handleClick_.bind(this, -delta));
   }
 
-  initDomInternal_ (className, delta) {
-    let element = htmlUtils.create('div', (className + ' ' + BASE_CLASS_NAME.CLASS_UNSELECTABLE));
-    let zoomin = htmlUtils.create('span', 'zoom-in', element);
-    zoomin.setAttribute('title', '放大');
-    zoomin.innerHTML = '+';
-    let zoomout = htmlUtils.create('span', 'zoom-out', element);
-    zoomout.setAttribute('title', '缩小');
-    zoomout.innerHTML = '\u2212';
-    Events.listen(zoomin, 'click', this.handleClick_.bind(this, delta));
-    Events.listen(zoomout, 'click', this.handleClick_.bind(this, -delta));
-    return element;
-  }
-
+  /**
+   * handel click event
+   * @param delta
+   * @param event
+   * @private
+   */
   handleClick_ (delta, event) {
     event.preventDefault()
     this.zoomByDelta_(delta)
   }
 
+  /**
+   * zoom
+   * @param delta
+   * @private
+   */
   zoomByDelta_ (delta) {
     let map = this.getMap()
     let view = map.getView()
     if (!view) {
-      throw new Error('未获取到视图！')
+      throw new Error('can not get view!')
     } else {
       let currentResolution = view.getResolution()
       if (currentResolution) {
         let newResolution = view.constrainResolution(currentResolution, delta)
-        if (this.duration_ > 0) {
+        if (this.get('duration') > 0) {
           if (view.getAnimating()) {
             view.cancelAnimations()
           }
           view.animate({
             resolution: newResolution,
-            duration: this.duration_,
+            duration: this.get('duration'),
             easing: ol.easing.easeOut
           })
         } else {

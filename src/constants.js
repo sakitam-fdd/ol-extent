@@ -1,8 +1,8 @@
 const BASE_CLASS_NAME = {
-  CLASS_HIDDEN: 'hmap-hidden',
-  CLASS_SELECTABLE: 'hmap-selectable',
-  CLASS_UNSELECTABLE: 'hmap-unselectable',
-  CLASS_CONTROL: 'hmap-control'
+  CLASS_HIDDEN: 'ole-hidden',
+  CLASS_SELECTABLE: 'ole-selectable',
+  CLASS_UNSELECTABLE: 'ole-unselectable',
+  CLASS_CONTROL: 'ole-control'
 }
 
 let UNITS = {

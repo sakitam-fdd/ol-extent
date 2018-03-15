@@ -1,4 +1,4 @@
-import {camelCase, trim} from './index';
+import {camelCase, trim} from './common';
 
 /**
  * create element
