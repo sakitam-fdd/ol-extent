@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <title>Title</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <link rel="stylesheet" href="../../../dist/olExtent.css">
+  <link rel="stylesheet" href="../../../dist/ol-extent.css">
   <link rel="stylesheet" href="../../../node_modules/openlayers/dist/ol.css">
   <style>
     html, body, #map {
@@ -18,7 +18,7 @@
 <body>
 <div class="map" id="map"></div>
 <script src="../../../node_modules/openlayers/dist/ol.js"></script>
-<script src="../../../dist/olExtent.js"></script>
+<script src="../../../dist/ol-extent.js"></script>
 <script type="text/javascript">
   var map = new ol.Map({
     layers: [
@@ -28,8 +28,7 @@
     ],
     target: 'map',
     controls: [
-      new ol.control.Loading({
-        className: 'hmap-loading-panel',
+      new ole.control.Loading({
         widget: 'animatedGif',
       })
     ],

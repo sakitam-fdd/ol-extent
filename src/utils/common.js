@@ -168,7 +168,26 @@ const getRandom = (min, max) => {
   let re = Math.round(r + min);
   re = Math.max(Math.min(re, max), min);
   return re;
-}
+};
+
+/**
+ * clone deep
+ * @param obj
+ * @returns {{}}
+ */
+const cloneDeep = function (obj) {
+  const keys = Object.keys(obj);
+  const newObject = {};
+  for (let i = 0; i < keys.length; i++) {
+    const key = keys[i];
+    if (typeof obj[key] === 'object') {
+      newObject[key] = cloneDeep(obj[key]);
+    } else {
+      newObject[key] = obj[key];
+    }
+  }
+  return newObject;
+};
 
 export {
   has,
@@ -181,5 +200,6 @@ export {
   isObject,
   isNumber,
   camelCase,
-  getRandom
+  getRandom,
+  cloneDeep
 }

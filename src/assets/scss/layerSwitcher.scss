@@ -1,11 +1,11 @@
 .ol-overlaycontainer-stopevent {
-  .hmap-layer-switcher {
+  .ole-layer-switcher {
     position: absolute;
     bottom: 15px;
     right: 15px;
     padding: 8px;
     background-color: rgba(255, 255, 255, 0.8);
-    .hmap-layer-switcher-ul-inner {
+    .ole-layer-switcher-ul-inner {
       position: relative;
       list-style: none;
       overflow: hidden;
@@ -15,7 +15,7 @@
       transition-property: width, background-color;
       -webkit-transition-duration: .4s;
       transition-duration: .4s;
-      .hmap-layer-switcher-li-inner {
+      .ole-layer-switcher-li-inner {
         position: absolute;
         box-sizing: border-box;
         border: 1px solid rgba(153, 153, 153, .42);
