@@ -161,14 +161,14 @@ class ContextMenu extends ol.control.Control {
       }
       items.forEach((item, index_) => {
         if (item && item['name'] && item['alias']) {
-          let numList = index + '-' + index_
+          let numList = index + '-' + index_;
           let li_ = create('li', this.className_ + '-li-' + numList + '-inner', ulList, this.className_ + '-li-' + numList + '-inner');
           setStyle(li_, {
             width: this.itemWidth + 'px',
             height: this.itemHeight + 'px',
             lineHeight: this.itemHeight + 'px'
           });
-          li_.setAttribute('data-name', item['alias'])
+          li_.setAttribute('data-name', item['alias']);
           on(li_, 'click', this.handleItemClick_.bind(this, item), this);
           if (item['icon']) {
             let span_ = create('span', 'li-icon-content', li_);
@@ -188,9 +188,9 @@ class ContextMenu extends ol.control.Control {
             li_.style.borderBottom = '1px solid #CCCCCC'
           }
           if (item['items']) {
-            this.htmlUtils(item['items'], numList, li_, true)
-            on(li_, 'mouseenter', this.handleItemMouseOver_, this)
-            on(li_, 'mouseleave', this.handleItemMouseOut_, this)
+            this.htmlUtils(item['items'], numList, li_, true);
+            on(li_, 'mouseenter', this.handleItemMouseOver_, this);
+            on(li_, 'mouseleave', this.handleItemMouseOut_, this);
           }
         }
       })
@@ -211,12 +211,12 @@ class ContextMenu extends ol.control.Control {
     let afterItems = null;
     switch (type) {
       case 'pop': // 移除最后一个
-        this.element.removeChild(child_)
-        afterItems = cloneItems.pop()
+        this.element.removeChild(child_);
+        afterItems = cloneItems.pop();
         this.htmlUtils(cloneItems, '', this.element);
         break;
       case 'push': // 数组的末尾添加新的元素
-        this.element.removeChild(child_)
+        this.element.removeChild(child_);
         afterItems = cloneItems = cloneItems.push(item);
         this.htmlUtils(cloneItems, '', this.element);
         break;

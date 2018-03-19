@@ -6,7 +6,7 @@ class Baidu extends ol.source.TileImage {
     html: '&copy; ' +
     '<a href="http://map.baidu.com/">百度地图</a> ' +
     'contributors.'
-  })
+  });
   constructor (options = {}) {
     let attributions = '';
     if (options.attributions !== undefined) {
@@ -16,7 +16,9 @@ class Baidu extends ol.source.TileImage {
     }
     options.projection = options['projection'] ? options.projection : 'EPSG:3857';
     const crossOrigin = options.crossOrigin !== undefined ? options.crossOrigin : 'anonymous';
-    const url = options.url !== undefined ? options.url : 'http://online{0-3}.map.bdimg.com/onlinelabel/?qt=tile&x={x}&y={y}&z={z}&styles=pl&udt=20170607&scaler=1&p=1';
+    let url = options.url !== undefined ? options.url : 'http://online{0-3}.map.bdimg.com/onlinelabel/?qt=tile&x={x}&y={y}&z={z}&styles={styles}&udt=20170607&scaler=1&p=1';
+    const hidpi = options.hidpi || (window.devicePixelRatio || (window.screen.deviceXDPI / window.screen.logicalXDPI)) > 1;
+    url = url.replace('{styles}', (hidpi ? 'ph' : 'pl'));
     let tileUrlFunction = options.tileUrlFunction ? options.tileUrlFunction : undefined;
     if (!tileUrlFunction) {
       tileUrlFunction = function (tileCoord) {
@@ -53,7 +55,8 @@ class Baidu extends ol.source.TileImage {
       reprojectionErrorThreshold: options.reprojectionErrorThreshold,
       tileUrlFunction: tileUrlFunction,
       url: url,
-      wrapX: options.wrapX
+      wrapX: options.wrapX,
+      tilePixelRatio: hidpi ? 2 : 1
     })
   }
 }

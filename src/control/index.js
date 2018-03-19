@@ -8,6 +8,7 @@ import MousePosition from './MousePosition'
 import LayerSwitcher from './LayerSwitcher'
 import ContextMenu from './ContextMenu'
 import CompareLayer from './CompareLayer'
+import ZoomSlider from './ZoomSlider'
 
 export {
   Loading,
@@ -19,5 +20,6 @@ export {
   MousePosition,
   LayerSwitcher,
   ContextMenu,
-  CompareLayer
+  CompareLayer,
+  ZoomSlider
 }
