@@ -1,4 +1,4 @@
-.hamp-js-measure {
+.ole-measure-tool {
   position: absolute;
   padding: 3px 5px;
   line-height: normal;
@@ -13,7 +13,7 @@
   background-color: rgb(255, 255, 255);
 }
 
-.hamp-js-measure-move {
+.ole-measure-tool-move {
   position: absolute;
   padding: 3px 5px;
   line-height: normal;
@@ -35,7 +35,7 @@
     color: #7A7A7A;
   }
 }
-.hmap-measure-overlay-label {
+.ole-measure-tool-overlay-label {
   border: 1px solid #7A7A7A;
   border-radius: 4px;
   color: #7a7a7a;
@@ -44,7 +44,7 @@
   background-color: #ffffff;
 }
 
-.hmap-measure-area-overlay-label {
+.ole-measure-tool-area-overlay-label {
   font-size: 12px;
   padding: 3px 5px;
   line-height: normal;
@@ -58,7 +58,7 @@
   color: #333333;
 }
 
-.hmap-measure-end-overlay-label {
+.ole-measure-tool-end-overlay-label {
   padding: 3px 5px;
   line-height: normal;
   text-align: center;

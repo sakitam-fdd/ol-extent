@@ -4,9 +4,7 @@
 
 [![Build Status](https://travis-ci.org/sakitam-fdd/ol-extent.svg?branch=master)](https://www.travis-ci.org/sakitam-fdd/ol-extent)
 [![codecov](https://codecov.io/gh/sakitam-fdd/ol-extent/branch/master/graph/badge.svg)](https://codecov.io/gh/sakitam-fdd/ol-extent)
-[![NPM downloads](https://img.shields.io/npm/dm/ol-extent.svg)](https://npmjs.org/package/ol-extent)
-[![](https://data.jsdelivr.com/v1/package/npm/ol-extent/badge)](https://www.jsdelivr.com/package/npm/ol-extent)
-![JS gzip size](http://img.badgesize.io/https://unpkg.com/ol-extent/dist/olExtent.js?compression=gzip&label=gzip%20size:%20JS)
+![JS gzip size](http://img.badgesize.io/https://unpkg.com/ol-extent/dist/ol-extent.js?compression=gzip&label=gzip%20size:%20JS)
 [![Npm package](https://img.shields.io/npm/v/ol-extent.svg)](https://www.npmjs.org/package/ol-extent)
 [![GitHub stars](https://img.shields.io/github/stars/sakitam-fdd/ol-extent.svg)](https://github.com/sakitam-fdd/ol-extent/stargazers)
 [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/sakitam-fdd/ol-extent/master/LICENSE)
