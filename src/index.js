@@ -7,3 +7,7 @@ export {
   control,
   interaction
 }
+
+export * from './source'
+export * from './control'
+export * from './interaction'
