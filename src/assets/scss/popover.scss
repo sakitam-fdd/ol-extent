@@ -1,4 +1,4 @@
-.hmap-js-popup {
+.ole-js-popup {
   display: none;
   position: absolute;
   background-color: white;
@@ -19,7 +19,6 @@
     border-top: 15px solid #c2c2c2;
     transform: translate(-50%, 0)
   }
-;
   &:after {
     position: absolute;
     bottom: -15px;
@@ -31,12 +30,12 @@
     border-top: 15px solid #ffffff;
     transform: translate(-50%, 0)
   }
-  .hmap-js-popup-content {
+  &-content {
     min-width: 100px;
     word-wrap: break-word;
     overflow-y: auto;
   }
-  .hmap-js-popup-closer {
+  &-closer {
     position: absolute;
     top: 3px;
     right: 10px;
@@ -50,7 +49,7 @@
       cursor: pointer;
     }
   }
-  .hmap-js-popup-minimize {
+  &-minimize {
     position: absolute;
     top: 0px;
     right: 40px;
@@ -66,7 +65,7 @@
     }
   }
 }
-.hmap-marker-minimize-panel {
+.ole-marker-minimize-panel {
   display: inline-block;
   width: 55px;
   height: 16px;
