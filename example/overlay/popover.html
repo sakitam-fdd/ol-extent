@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>气泡</title>
+  <title>popovers</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <link rel="stylesheet" href="../../node_modules/openlayers/dist/ol.css">
   <link rel="stylesheet" href="../../dist/ol-extent.css">
@@ -37,7 +37,8 @@
       showCloser: true,
       showMarkFeature: true,
       showMinimize: true,
-      offset: [0, -20]
+      autoPan: true,
+      offset: [0, 0]
     })
     map.addOverlay(popup);
     var prettyCoord = ol.coordinate.toStringHDMS(ol.proj.transform(evt.coordinate, 'EPSG:3857', 'EPSG:4326'), 2);

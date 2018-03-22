@@ -8,6 +8,7 @@
   left: -50%;
   min-width: 100px;
   max-width: 400px;
+  will-change: left,right,top,bottom;
   &:before {
     position: absolute;
     bottom: -16px;
@@ -95,4 +96,11 @@
       cursor: pointer;
     }
   }
+}
+.ole-selectable {
+  -webkit-touch-callout: default;
+  -webkit-user-select: auto;
+  -moz-user-select: auto;
+  -ms-user-select: auto;
+  user-select: auto;
 }
