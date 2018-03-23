@@ -21,8 +21,6 @@ git clone https://github.com/sakitam-fdd/ol-extent.git
 npm install // or yarn
 npm run dev
 npm run build
-npm run karma.test
-npm run karma.cover
 ```
 
 ## Install
@@ -50,7 +48,7 @@ https://unpkg.com/ol-extent/dist/ol-extent.min.css
 
 ```bash
 npm install ol-extent --save
-import olExtent 'ol-extent'
+import ole 'ol-extent'
 ```
 
 ## Examples

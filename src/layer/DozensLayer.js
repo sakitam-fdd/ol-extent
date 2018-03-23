@@ -1,20 +1,43 @@
-import ol from 'openlayers';
+import ol from 'openlayers'
 import { createCanvas } from '../utils';
 
-class CanvasLayer extends ol.layer.Image {
+class DozensLayer extends ol.layer.Image {
   constructor (options = {}) {
     super(options)
+
     /**
      * this canvas
      * @type {null}
      * @private
      */
     this._canvas = null
+
+    /**
+     * context
+     * @type {null}
+     * @private
+     */
+    this._context = null
+
+    /**
+     * style
+     * @type {null}
+     * @private
+     */
+    this._style = null
+
+    /**
+     * features
+     * @type {Array}
+     */
+    this.features = []
+
     /**
      * options
      * @type {{}}
      */
     this.options = options
+
     this.setSource(new ol.source.ImageCanvas({
       logo: options.logo,
       state: options.state,
@@ -24,7 +47,68 @@ class CanvasLayer extends ol.layer.Image {
       projection: (options.hasOwnProperty('projection') ? options.projection : 'EPSG:3857'),
       ratio: (options.hasOwnProperty('ratio') ? options.ratio : 1)
     }))
+
+    this.setStyle(options.style)
+
     this.on('precompose', this.redraw, this)
+  }
+
+  addFeature (feature) {
+    this.features.push(feature)
+  }
+
+  addFeatures (features) {
+    this.features = this.features.concat(features)
+  }
+
+  getFeatures () {
+    return this.features
+  }
+
+  getFeatureById (id) {
+    //
+  }
+
+  getStyle () {
+    return this._style
+  }
+
+  /**
+   * return style
+   * @param style
+   */
+  setStyle (style) {
+    this._style = style
+  }
+
+  _drawFeature () {
+    const that = this
+    if (!this.getMap()) return
+    if (!this._context) this._context = this.getContext()
+    const _length = this.features.length
+    const imageStyle = that._style.getImage()
+    function render_ (beauty) {
+      for (let i = 0; i < _length; i++) {
+        const geometry = that.features[i].getGeometry()
+        const coordinates = geometry && geometry.getCoordinates()
+        if (coordinates) {
+          const pixel = that.getMap().getPixelFromCoordinate(coordinates)
+          const imageStyle = that._style.getImage()
+          if (imageStyle) {
+            // imageStyle.load()
+          }
+          const size = imageStyle.getSize()
+          that._context.drawImage(beauty, pixel[0], pixel[1], size[0], size[1])
+        }
+      }
+    }
+    if (imageStyle) {
+      const beauty = new Image()
+      beauty.src = imageStyle.getSrc()
+      if (beauty.complete) {
+        render_(beauty)
+      }
+    }
   }
 
   /**
@@ -82,6 +166,7 @@ class CanvasLayer extends ol.layer.Image {
     }
     if (resolution <= this.get('maxResolution')) {
       const context = this.getContext()
+      this._drawFeature()
       this.get('render') && this.get('render')({
         context: context,
         extent: extent,
@@ -100,15 +185,17 @@ class CanvasLayer extends ol.layer.Image {
    * @param map
    */
   setMap (map) {
-    ol.layer.Image.prototype.setMap.call(this, map)
+    this.set('originMap', map)
+    // super.setMap.call(this, map)
   }
 
   /**
    * get map
    */
   getMap () {
-    return this.get('map')
+    return this.get('originMap')
   }
 }
 
-export default CanvasLayer
+ol.layer.DozensLayer = DozensLayer
+export default DozensLayer
