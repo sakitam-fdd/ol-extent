@@ -1,0 +1,64 @@
+.ole-overview-map {
+  position: absolute;
+  right: 0em;
+  bottom: 0em;
+  width: 120px;
+  height: 120px;
+  visibility: visible;
+  background: #fff;
+  border-top: solid 1px #ccc;
+  border-left: solid 1px #ccc;
+  transition: all 0.3s;
+}
+
+.ole-overview-map .ole-overview-main {
+  width: 115px;
+  height: 115px;
+  position: absolute;
+  left: 5px;
+  top: 5px;
+  overflow: hidden;
+  border-top: solid 1px #ccc;
+  border-left: solid 1px #ccc;
+}
+
+.ole-overview-map.ol-uncollapsible {
+  bottom: 0;
+  left: 0;
+  border-radius: 0 4px 0 0;
+}
+.ole-overview-map .ole-overview-map-target,
+.ole-overview-map button {
+  display: inline-block;
+}
+.ole-overview-map .ole-overview-map-target {
+  position: absolute;
+  left: 5px;
+  top: 5px;
+  overflow: hidden;
+  width: 115px;
+  height: 115px;
+  border-top: solid 1px #ccc;
+  border-left: solid 1px #ccc;
+}
+
+.ole-overview-map:not(.overview-collapsed) .ole-overview-map-button{
+  width: 17px;
+  height: 17px;
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  background: url(./images/mapcontrols.png) -40px -386px;
+  cursor: pointer;
+  background-position: -40px -386px;
+}
+
+.ole-overview-map .ole-overview-map-box {
+  width: 62px;
+  height: 35px;
+  background: rgba(27,157,232, 0.5);
+  opacity: .5;
+  border: 2px solid red;
+  filter: alpha(opacity=25);
+  cursor: move;
+}

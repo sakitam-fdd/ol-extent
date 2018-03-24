@@ -22,14 +22,15 @@
 <body>
 <div id="map"></div>
 <script src="../../node_modules/openlayers/dist/ol.js"></script>
-<script src="../../dist/olSourceBaidu.js"></script>
+<script src="../../dist/ol-extent.js"></script>
 <script type="text/javascript">
   var map = new ol.Map({
     layers: [
       new ol.layer.Tile({
-        source: new ol.source.BAIDU({
+        source: new ole.source.Baidu({
+          hidpi: true,
           origin: [43.88955327932, 12.590178885765],
-          url: 'http://online{0-3}.map.bdimg.com/onlinelabel/?qt=tile&x={x}&y={y}&z={z}&styles=pl&udt=20170607&scaler=1&p=1'
+          url: 'http://online{0-3}.map.bdimg.com/onlinelabel/?qt=tile&x={x}&y={y}&z={z}&styles={styles}&udt=20170607&scaler=1&p=1'
         })
       })
     ],
@@ -38,7 +39,8 @@
       center: [0, 0],
       zoom: 2
     })
-  })
+  });
+  console.log(map);
 </script>
 </body>
 </html>

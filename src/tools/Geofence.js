@@ -4,7 +4,7 @@
  */
 import ol from 'openlayers'
 import Observable from 'observable-emit'
-import getuuid from 'uuid'
+import uuid from 'uuid'
 import mixin from '../utils/mixin'
 import {has} from '../utils/utils'
 import 'core-js/es6/set'
@@ -29,7 +29,7 @@ ol.tools.Geofence.prototype.addGeofence = function (geom, options) {
     if (geom.get('id')) {
       this.geofencesIds_.add(geom.get('id'))
     } else {
-      let uuid = getuuid()
+      let uuid = uuid()
       this.geofencesIds_.add(geom.get('id'))
       geom.set('id', uuid)
     }

@@ -5,7 +5,7 @@
   <title>测量工具</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <link rel="stylesheet" href="../../node_modules/openlayers/dist/ol.css">
-  <link rel="stylesheet" href="../../dist/css/olInteractionMeasureTool.css">
+  <link rel="stylesheet" href="../../dist/ol-extent.css">
   <style>
     html, body, #map {
       width: 100%;
@@ -33,7 +33,7 @@
 </div>
 <div class="map" id="map"></div>
 <script src="../../node_modules/openlayers/dist/ol.js"></script>
-<script src="../../dist/olInteractionMeasureTool.js"></script>
+<script src="../../dist/ol-extent.js"></script>
 <script type="text/javascript">
   var map = new ol.Map({
     layers: [
@@ -50,14 +50,14 @@
       zoom: 6
     })
   });
-  var measureTool = new ol.interaction.MeasureTool()
+  var measureTool = new ole.interaction.MeasureTool()
   map.addInteraction(measureTool)
   function measureLength () {
-    measureTool.setTool(true, 'measureLength', true)
+    measureTool.setTool(true, 'measureLength', false)
   }
 
   function measureArea () {
-    measureTool.setTool(true, 'measureArea', true)
+    measureTool.setTool(true, 'measureArea', false)
   }
 
   function measureCircle () {

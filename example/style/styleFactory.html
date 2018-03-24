@@ -18,13 +18,12 @@
 <body>
 <div id="map"></div>
 <script src="../../node_modules/openlayers/dist/ol.js"></script>
-<script src="../../dist/olSourceGoogle.js"></script>
-<script src="../../dist/olStyleFactory.js"></script>
+<script src="../../dist/ol-extent.js"></script>
 <script type="text/javascript">
   var map = new ol.Map({
     layers: [
       new ol.layer.Tile({
-        source: new ol.source.GOOGLE()
+        source: new ole.source.Google()
       })
     ],
     target: 'map',
@@ -119,7 +118,7 @@
   var styleFunction = function (feature) {
     var properties = feature.getProperties()
     if (properties['style']) {
-      return new ol.style.Factory(properties['style'])
+      return ole.StyleFactory.getStyle(properties['style'])
     }
   };
   var vectorLayer = new ol.layer.Vector({

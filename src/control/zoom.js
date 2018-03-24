@@ -1,102 +1,93 @@
 /**
  * Created by FDD on 2017/9/19.
- * @desc 缩放按钮
+ * @desc ZoomMenu
  */
-import ol from 'openlayers'
-import '../asset/scss/zoom.scss'
-import {BASE_CLASS_NAME} from '../constants'
-import * as htmlUtils from 'nature-dom-util/src/utils/domUtils'
-import * as Events from 'nature-dom-util/src/events/Events'
-import {EventType} from 'nature-dom-util/src/events/EventType'
-ol.control.ZoomMenu = function (params = {}) {
-  this.options = params
+import '../assets/scss/zoom.scss'
+import ol from 'openlayers';
+import {BASE_CLASS_NAME} from '../constants';
+import { create, on } from '../utils';
+
+class ZoomMenu extends ol.control.Control {
+  constructor (options = {}) {
+    /**
+     * 基础类名
+     * @type {string}
+     */
+    const className = options.className !== undefined ? options.className : 'ole-control-zoom';
+
+    /**
+     * delta
+     */
+    const delta = options.delta !== undefined ? options.delta : 1;
+
+    const element_ = create('div', (className + ' ' + BASE_CLASS_NAME.CLASS_UNSELECTABLE));
+
+    const zoomIn = create('span', 'zoom-in', element_);
+    zoomIn.setAttribute('title', '放大');
+    zoomIn.innerHTML = '+';
+    const zoomOut = create('span', 'zoom-out', element_);
+    zoomOut.setAttribute('title', '缩小');
+    zoomOut.innerHTML = '\u2212';
+
+    /**
+     * 动画时间
+     * @type {number}
+     * @private
+     */
+    const duration_ = options.duration !== undefined ? options.duration : 250;
+    super({
+      element: element_,
+      target: options.target
+    });
+
+    /**
+     * set duration
+     */
+    this.set('duration', duration_);
+    on(zoomIn, 'click', this.handleClick_.bind(this, delta));
+    on(zoomOut, 'click', this.handleClick_.bind(this, -delta));
+  }
 
   /**
-   * 基础类名
-   * @type {string}
-   */
-  let className = this.options.className !== undefined ? this.options.className : 'hmap-control-zoom'
-
-  /**
-   * delta
-   */
-  let delta = this.options.delta !== undefined ? this.options.delta : 1
-
-  let element_ = this.initDomInternal_(className, delta)
-
-  /**
-   * 动画时间
-   * @type {number}
+   * handel click event
+   * @param delta
+   * @param event
    * @private
    */
-  this.duration_ = this.options.duration !== undefined ? this.options.duration : 250
-  ol.control.Control.call(this, {
-    element: element_,
-    target: this.options.target
-  })
-}
-ol.inherits(ol.control.ZoomMenu, ol.control.Control)
+  handleClick_ (delta, event) {
+    event.preventDefault()
+    this.zoomByDelta_(delta)
+  }
 
-/**
- * 初始化相关dom
- * @param className
- * @param delta
- * @returns {Element}
- * @private
- */
-ol.control.ZoomMenu.prototype.initDomInternal_ = function (className, delta) {
-  let element = htmlUtils.create('div', (className + ' ' + BASE_CLASS_NAME.CLASS_UNSELECTABLE))
-  let zoomin = htmlUtils.create('span', 'zoom-in', element)
-  zoomin.setAttribute('title', '放大')
-  zoomin.innerHTML = '+'
-  let zoomout = htmlUtils.create('span', 'zoom-out', element)
-  zoomout.setAttribute('title', '缩小')
-  zoomout.innerHTML = '\u2212'
-  Events.listen(zoomin, EventType.CLICK, ol.control.ZoomMenu.prototype.handleClick_.bind(this, delta))
-  Events.listen(zoomout, EventType.CLICK, ol.control.ZoomMenu.prototype.handleClick_.bind(this, -delta))
-  return element
-}
-
-/**
- * 处理点击事件
- * @param delta
- * @param event
- * @private
- */
-ol.control.ZoomMenu.prototype.handleClick_ = function (delta, event) {
-  event.preventDefault()
-  this.zoomByDelta_(delta)
-}
-
-/**
- * 缩放控制
- * @param delta
- * @private
- */
-ol.control.ZoomMenu.prototype.zoomByDelta_ = function (delta) {
-  let map = this.getMap()
-  let view = map.getView()
-  if (!view) {
-    throw new Error('未获取到视图！')
-  } else {
-    let currentResolution = view.getResolution()
-    if (currentResolution) {
-      let newResolution = view.constrainResolution(currentResolution, delta)
-      if (this.duration_ > 0) {
-        if (view.getAnimating()) {
-          view.cancelAnimations()
+  /**
+   * zoom
+   * @param delta
+   * @private
+   */
+  zoomByDelta_ (delta) {
+    let map = this.getMap()
+    let view = map.getView()
+    if (!view) {
+      throw new Error('can not get view!')
+    } else {
+      let currentResolution = view.getResolution()
+      if (currentResolution) {
+        let newResolution = view.constrainResolution(currentResolution, delta)
+        if (this.get('duration') > 0) {
+          if (view.getAnimating()) {
+            view.cancelAnimations()
+          }
+          view.animate({
+            resolution: newResolution,
+            duration: this.get('duration'),
+            easing: ol.easing.easeOut
+          })
+        } else {
+          view.setResolution(newResolution)
         }
-        view.animate({
-          resolution: newResolution,
-          duration: this.duration_,
-          easing: ol.easing.easeOut
-        })
-      } else {
-        view.setResolution(newResolution)
       }
     }
   }
 }
 
-let olControlZoomMenu = ol.control.ZoomMenu
-export default olControlZoomMenu
+export default ZoomMenu

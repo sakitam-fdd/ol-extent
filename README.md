@@ -1,117 +1,121 @@
 # ol-extent
-a JavaScript library for openlayers extent
+
+> a JavaScript library for openlayers extent, It is important to note that the current version has changed a lot
+  You have to look at the examples or look at the relevant documents.
+
+[![Build Status](https://travis-ci.org/sakitam-fdd/ol-extent.svg?branch=master)](https://www.travis-ci.org/sakitam-fdd/ol-extent)
+[![codecov](https://codecov.io/gh/sakitam-fdd/ol-extent/branch/master/graph/badge.svg)](https://codecov.io/gh/sakitam-fdd/ol-extent)
+![JS gzip size](http://img.badgesize.io/https://unpkg.com/ol-extent/dist/ol-extent.js?compression=gzip&label=gzip%20size:%20JS)
+[![Npm package](https://img.shields.io/npm/v/ol-extent.svg)](https://www.npmjs.org/package/ol-extent)
+[![GitHub stars](https://img.shields.io/github/stars/sakitam-fdd/ol-extent.svg)](https://github.com/sakitam-fdd/ol-extent/stargazers)
+[![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/sakitam-fdd/ol-extent/master/LICENSE)
 
 ## build
 
-> 重要: Github 仓库的 /dist 文件夹只有在新版本发布时才会更新。如果想要使用 Github 上最新的源码，你需要自己构建。
+> Important: The `/dist` folder of Github repositories will not be updated until the new version is released.
+  If you want to use the latest source on Github, you need to build it yourself.
 
 ---
 
 ```bash
 git clone https://github.com/sakitam-fdd/ol-extent.git
+npm install // or yarn
 npm run dev
 npm run build
 ```
 
+## Install
+
 ### CDN
 
-```bash
-https://unpkg.com/ol-extent@1.1.3/dist/olExtent.min.js
-https://unpkg.com/ol-extent@1.1.3/dist/olExtent.js
-https://unpkg.com/ol-extent@1.1.3/dist/css/olExtent.css
-https://unpkg.com/ol-extent@1.1.3/dist/css/olExtent.min.css
-```
-
-### 单控件使用
-
-> 按功能模块名称引用
+current you can use 
+* [unpkg.com](https://unpkg.com/ol-extent/dist/ol-extent.js) / 
+* [jsdelivr](https://cdn.jsdelivr.net/npm/ol-extent/dist/ol-extent.js) get the latest version of the resource。
 
 ```bash
-https://unpkg.com/ol-extent@1.1.3/dist/[功能模块名称].min.js
-https://unpkg.com/ol-extent@1.1.3/dist/[功能模块名称].js
-https://unpkg.com/ol-extent@1.1.3/dist/css/[功能模块名称].css
-https://unpkg.com/ol-extent@1.1.3/dist/css/[功能模块名称].min.css
+// jsdelivr (It is best to lock the version number for cache reasons)
+https://cdn.jsdelivr.net/npm/ol-extent/dist/ol-extent.js
+https://cdn.jsdelivr.net/npm/ol-extent/dist/ol-extent.css
+https://cdn.jsdelivr.net/npm/ol-extent/dist/ol-extent.min.js
+https://cdn.jsdelivr.net/npm/ol-extent/dist/ol-extent.min.css
+// npm
+https://unpkg.com/ol-extent/dist/ol-extent.js
+https://unpkg.com/ol-extent/dist/ol-extent.css
+https://unpkg.com/ol-extent/dist/ol-extent.min.js
+https://unpkg.com/ol-extent/dist/ol-extent.min.css
 ```
 
 ### NPM
 
 ```bash
 npm install ol-extent --save
-import olExtent 'ol-extent'
+import ole 'ol-extent'
 ```
-
-### 模块列表
-
-#### 控件
-
-| 控件 | 简介 | 模块名 | 命名空间 |
-| --- | --- | --- | --- |
-| ZoomMenu | 放大缩小控件 | `olControlZoomMenu` | `olControlZoomMenu` or `ol.control.ZoomMenu` |
-| ContextMenu | 右键控件 | `olControlContextMenu` | `olControlContextMenu` or `ol.control.ContextMenu` |
-| CompareLayer | 图层对比控件 | `olControlCompareLayer` | `olControlCompareLayer` or `ol.control.CompareLayer` |
-| RotateControl | 旋转控件 | `olControlRotate` | `olControlRotate` or `ol.control.RotateControl` |
-| Loading | 图层加载进度控件 | `olControlLoading` | `olControlLoading` or `ol.control.Loading` |
-| BZoomSlider | 图层平移缩放控件 | `olControlBZoomSlider` | `olControlBZoomSlider` or `ol.control.BZoomSlider` |
-| FullScreenMenu | 全屏控件 | `olControlFullScreenMenu` | `olControlFullScreenMenu` or `ol.control.FullScreenMenu` |
-| LayerSwitcher | 图层切换控件 | `olControlLayerSwitcher` | `olControlLayerSwitcher` or `ol.control.LayerSwitcher` |
-| ScaleLineH | 比例尺控件 | `olControlScaleLine` | `olControlScaleLine` or `ol.control.ScaleLineH` |
-| MousePositionH | 鼠标位置显示控件 | `olControlMousePosition` | `olControlMousePosition` or `ol.control.MousePositionH` |
-| Geolocation | 定位控件 | `olControlOverviewMap` | `olControlOverviewMap` or `ol.control.Geolocation` (暂时屏蔽) |
-| OverviewMapH | 鹰眼控件 | `olControlOverviewMap` | `olControlOverviewMap` or `ol.control.OverviewMapH` |
-
-#### 交互
-
-| 交互 | 简介 | 模块名 | 命名空间 |
-| --- | --- | --- | --- |
-| MeasureTool | 测量 | `olInteractionMeasureTool` | `olInteractionMeasureTool` or `ol.interaction.MeasureTool` |
-| FreeHandCircle | 可变圆（主要用于周边搜索） | `olInteractionFreeHandCircle` | `olInteractionFreeHandCircle` or `ol.interaction.FreeHandCircle` |
-| LayerSpyglass | 图层滤镜 | `olInteractionLayerSpyglass` | `olInteractionLayerSpyglass` or `ol.interaction.LayerSpyglass` |
-| LayerMagnify | 放大镜 | `olInteractionLayerMagnify` | `olInteractionLayerMagnify` or `ol.interaction.LayerMagnify` |
-
-#### 图层
-
-| 图层 | 简介 | 模块名 | 命名空间 |
-| --- | --- | --- | --- |
-| LayerUtils | 图层工具 | `olLayerLayerUtils` | `olLayerLayerUtils` or `ol.layer.LayerUtils` |
-| Vector | 矢量图层扩展3D渲染 | `olLayerVector` | `olLayerVector` or `ol.layer.Vector` |
-
-#### overlay
-
-| overlay | 简介 | 模块名 | 命名空间 |
-| --- | --- | --- | --- |
-| Popover | 气泡 | `olPopover` | `olPopover` or `ol.Popover` |
-
-#### render
-
-| render | 简介 | 模块名 | 命名空间 |
-| --- | --- | --- | --- |
-| render3D | 矢量要素3D渲染器 | `olRender3D` | `olRender3D` or `ol.render.render3D` |
-
-#### source
-
-| source | 简介 | 模块名 | 命名空间 |
-| --- | --- | --- | --- |
-| BAIDU | 百度数据源图层 | `olSourceBaidu` | `olSourceBaidu` or `ol.source.BAIDU` |
-| GAODE | 高德数据源图层 | `olSourceGaode` | `olSourceGaode` or `ol.source.GAODE` |
-| GOOGLE | 谷歌数据源图层 | `olSourceGoogle` | `olSourceGoogle` or `ol.source.GOOGLE` |
-
-#### style
-
-| style | 简介 | 模块名 | 命名空间 |
-| --- | --- | --- | --- |
-| Factory | 兼容json格式传入的样式信息（便于矢量渲染的样式保存和修改） | `olStyleFactory` | `olStyleFactory` or `ol.style.Factory` |
-
-#### tools
-
-| tools | 简介 | 模块名 | 命名空间 |
-| --- | --- | --- | --- |
-| Geofence | 电子围栏（功能待完善） | `olToolsGeofence` | `olToolsGeofence` or `ol.tools.Geofence` |
-| PrintfMap | 地图打印 | `olToolsPrintfMap` | `olToolsPrintfMap` or `ol.tools.PrintfMap` |
 
 ## Examples
 
-其他示例请参看examples文件夹
+see examples folder
 
-# 更新日志
+## extent
 
-[详细](./CHANGELOG.md)
+### Control
+
+| control | introduction | doc |
+| --- | --- | --- |
+| ZoomMenu | zoom control | [ZoomMenu]() |
+| ContextMenu | context menu control | [ContextMenu]() |
+| CompareLayer | layer compare control | [CompareLayer]() |
+| RotateControl | Rotate control | [RotateControl]() |
+| Loading | loading control | [Loading]() |
+| ZoomSlider | zoom and slider control | [ZoomSlider]() |
+| FullScreen | fullscreen control | [FullScreen]() |
+| LayerSwitcher | Layer switcher control | [LayerSwitcher]() |
+| ScaleLine | ScaleLine control | [ScaleLine]() |
+| MousePosition | Mouse position display control | [MousePosition]() |
+| OverviewMap | OverviewMap control | [OverviewMap]() |
+
+### Interaction
+
+| Interaction | introduction | doc |
+| --- | --- | --- |
+| MeasureTool | measure tool | [MeasureTool]() |
+| FreeHandCircle | Free circle (mainly for peripheral search) | [FreeHandCircle]() |
+| LayerMagnify | Map magnifying mirror function | [LayerMagnify]() |
+| layerSpyglass | Layer filter function | [layerSpyglass]() |
+
+### Layer
+
+| name | introduction | doc |
+| --- | --- | --- |
+| CanvasLayer | The extended `canvas` layer based on `Image` layer can be used to extend the other custom rendering layers | [CanvasLayer]() |
+| DozensLayer | `canvas` layer used to render large amounts of data | [DozensLayer]() |
+
+### Source
+
+| name | introduction | doc |
+| --- | --- | --- |
+| Baidu | bmap source | [Baidu]() |
+| Gaode | amap source | [Gaode]() |
+| Google | goolge source | [Google]() |
+
+### Overlay
+
+| name | introduction | doc |
+| --- | --- | --- |
+| Popover | Popover (support mark and minimization) | [Popover]() |
+
+### Tools
+
+| tool | introduction | doc |
+| --- | --- | --- |
+| StyleFactory | Style processing tools (parse JSON storage style information) | [StyleFactory]() |
+| layerUtils | Layer processing tool (related layer operation tool) | [layerUtils]() |
+| utils | `dom event` and other tools | [utils]() |
+
+## Resources
+
+* [openlayers](https://github.com/openlayers/openlayers)
+
+# changelog
+
+[detail](./CHANGELOG.md)
