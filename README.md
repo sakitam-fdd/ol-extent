@@ -1,6 +1,7 @@
 # ol-extent
 
-> a JavaScript library for openlayers extent
+> a JavaScript library for openlayers extent, It is important to note that the current version has changed a lot
+  You have to look at the examples or look at the relevant documents.
 
 [![Build Status](https://travis-ci.org/sakitam-fdd/ol-extent.svg?branch=master)](https://www.travis-ci.org/sakitam-fdd/ol-extent)
 [![codecov](https://codecov.io/gh/sakitam-fdd/ol-extent/branch/master/graph/badge.svg)](https://codecov.io/gh/sakitam-fdd/ol-extent)
@@ -54,6 +55,62 @@ import ole 'ol-extent'
 ## Examples
 
 see examples folder
+
+## extent
+
+### Control
+
+| control | introduction | doc |
+| --- | --- | --- |
+| ZoomMenu | zoom control | [ZoomMenu]() |
+| ContextMenu | context menu control | [ContextMenu]() |
+| CompareLayer | layer compare control | [CompareLayer]() |
+| RotateControl | Rotate control | [RotateControl]() |
+| Loading | loading control | [Loading]() |
+| ZoomSlider | zoom and slider control | [ZoomSlider]() |
+| FullScreen | fullscreen control | [FullScreen]() |
+| LayerSwitcher | Layer switcher control | [LayerSwitcher]() |
+| ScaleLine | ScaleLine control | [ScaleLine]() |
+| MousePosition | Mouse position display control | [MousePosition]() |
+| OverviewMap | OverviewMap control | [OverviewMap]() |
+
+### Interaction
+
+| Interaction | introduction | doc |
+| --- | --- | --- |
+| MeasureTool | measure tool | [MeasureTool]() |
+| FreeHandCircle | Free circle (mainly for peripheral search) | [FreeHandCircle]() |
+| LayerMagnify | Map magnifying mirror function | [LayerMagnify]() |
+| layerSpyglass | Layer filter function | [layerSpyglass]() |
+
+### Layer
+
+| name | introduction | doc |
+| --- | --- | --- |
+| CanvasLayer | The extended `canvas` layer based on `Image` layer can be used to extend the other custom rendering layers | [CanvasLayer]() |
+| DozensLayer | `canvas` layer used to render large amounts of data | [DozensLayer]() |
+
+### Source
+
+| name | introduction | doc |
+| --- | --- | --- |
+| Baidu | bmap source | [Baidu]() |
+| Gaode | amap source | [Gaode]() |
+| Google | goolge source | [Google]() |
+
+### Overlay
+
+| name | introduction | doc |
+| --- | --- | --- |
+| Popover | Popover (support mark and minimization) | [Popover]() |
+
+### Tools
+
+| tool | introduction | doc |
+| --- | --- | --- |
+| StyleFactory | Style processing tools (parse JSON storage style information) | [StyleFactory]() |
+| layerUtils | Layer processing tool (related layer operation tool) | [layerUtils]() |
+| utils | `dom event` and other tools | [utils]() |
 
 ## Resources
 

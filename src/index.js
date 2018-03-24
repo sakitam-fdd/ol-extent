@@ -4,6 +4,7 @@ import * as source from './source'
 import * as control from './control'
 import * as interaction from './interaction'
 import * as layerUtils from './layer/layerUtils'
+import StyleFactory from './style/StyleFactory'
 
 export {
   utils,
@@ -11,7 +12,8 @@ export {
   source,
   control,
   interaction,
-  layerUtils
+  layerUtils,
+  StyleFactory
 }
 
 export * from './layer'
