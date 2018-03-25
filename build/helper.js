@@ -65,12 +65,14 @@ const checkFolderExist = (path, mkdir) => {
     return true
   }
 };
-const cssPlugins = scss({
-  output: resolve(_package.style),
-  processor: css => postcss([autoprefixer, cssnano])
-    .process(css)
-    .then(result => result.css)
-});
+const cssPlugins = function (type) {
+  return scss({
+    output: !!type ? resolve(handleMinEsm(_package.style)) : resolve(_package.style),
+    processor: css => postcss([autoprefixer, cssnano])
+      .process(css)
+      .then(result => result.css)
+  })
+};
 
 module.exports = {
   _package,
@@ -79,5 +81,6 @@ module.exports = {
   logError,
   blueString,
   cssPlugins,
-  handleMinEsm
+  handleMinEsm,
+  checkFolderExist
 };

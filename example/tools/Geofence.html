@@ -5,7 +5,7 @@
   <title>地理围栏功能</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <link rel="stylesheet" href="../../node_modules/openlayers/dist/ol.css">
-  <link rel="stylesheet" href="../css/button.css">
+  <link rel="stylesheet" href="../asset/css/button.css">
   <style>
     html, body, #map {
       width: 100%;
@@ -28,7 +28,7 @@
 </div>
 <div class="map" id="map"></div>
 <script src="../../node_modules/openlayers/dist/ol.js"></script>
-<script src="../../dist/olToolsGeofence.js"></script>
+<script src="../../dist/ol-extent.js"></script>
 <script type="text/javascript">
   var center = [1.295722616075553E7, 4865106.159131439]
   var map = new ol.Map({
@@ -51,10 +51,15 @@
   })
   map.addLayer(vector)
   map.addLayer(vectorLayer)
-  var geoFence = new ol.tools.Geofence()
+  var geoFence = new ole.Geofence()
   geoFence.on('enter', function (event) {
     console.log(event)
-  })
+  });
+
+  geoFence.on('leave', function (event) {
+    console.log(event)
+  });
+
   var geom = new ol.geom.Polygon([
     [
       [1.295722616075553E7, 4865106.159131439],
@@ -111,7 +116,7 @@
   geoFence.addGeofence(geom, {
     duration: 0, // 有效时间，单位毫秒，如小于等于0则表示长期有效
     dwellDelay: 10000 // 判断停留的延迟，单位毫秒，只有停留超过一定时间才会触发停留事件
-  })
+  });
   var feature1 = new ol.Feature({
     geometry: geom
   })
@@ -121,7 +126,7 @@
   vector.getSource().addFeature(feature1)
 //  vector.getSource().addFeature(feature2)
 
-  for (var i = 0; i < 100; i++) {
+  for (var i = 0; i < 10; i++) {
     var point = new ol.Feature({
       geometry: new ol.geom.Point([
         center[0] - 300 + 600 * Math.random(),
@@ -134,7 +139,6 @@
 
   var move = function(){
     var visitors = vectorLayer.getSource().getFeatures();
-    geoFence.updateVisitor(visitor);
     for(var i in visitors){
       if(Math.random() < 0.6){
         continue;
