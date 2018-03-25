@@ -1,6 +1,6 @@
 {
   "name": "ol-extent",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "a JavaScript library for openlayers extent",
   "main": "dist/ol-extent.common.js",
   "module": "dist/ol-extent.esm.js",
