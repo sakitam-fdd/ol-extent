@@ -4,7 +4,6 @@
   You have to look at the examples or look at the relevant documents.
 
 [![Build Status](https://travis-ci.org/sakitam-fdd/ol-extent.svg?branch=master)](https://www.travis-ci.org/sakitam-fdd/ol-extent)
-[![codecov](https://codecov.io/gh/sakitam-fdd/ol-extent/branch/master/graph/badge.svg)](https://codecov.io/gh/sakitam-fdd/ol-extent)
 ![JS gzip size](http://img.badgesize.io/https://unpkg.com/ol-extent/dist/ol-extent.js?compression=gzip&label=gzip%20size:%20JS)
 [![Npm package](https://img.shields.io/npm/v/ol-extent.svg)](https://www.npmjs.org/package/ol-extent)
 [![GitHub stars](https://img.shields.io/github/stars/sakitam-fdd/ol-extent.svg)](https://github.com/sakitam-fdd/ol-extent/stargazers)

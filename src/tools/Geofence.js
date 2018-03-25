@@ -3,127 +3,142 @@
  * @desc 实现地理围栏功能
  */
 import ol from 'openlayers'
-import Observable from 'observable-emit'
-import uuid from 'uuid'
-import mixin from '../utils/mixin'
-import {has} from '../utils/utils'
-import 'core-js/es6/set'
-if (!has(ol, 'tools')) {
-  ol.tools = {}
-}
+import {uuid} from '../utils'
 
-ol.tools.Geofence = function () {
-  this.geofences_ = []
-  this.geofencesIds_ = new Set()
-  Observable.call(this)
-}
-
-/**
- * 添加电子围栏
- * @param geom
- * @param options
- */
-ol.tools.Geofence.prototype.addGeofence = function (geom, options) {
-  if (geom && (geom instanceof ol.geom.Polygon || geom instanceof ol.geom.Circle)) {
-    let _length = JSON.stringify([...(this.geofencesIds_)].length)
-    if (geom.get('id')) {
-      this.geofencesIds_.add(geom.get('id'))
-    } else {
-      let uuid = uuid()
-      this.geofencesIds_.add(geom.get('id'))
-      geom.set('id', uuid)
-    }
-    let length_ = [...(this.geofencesIds_)].length
-    if (Number(JSON.parse(_length)) !== length_) {
-      this.geofences_.push(geom)
-    } else {
-      throw new Error('禁止添加相同id的数据')
-    }
-  } else {
-    throw new Error('传入的不是面数据!')
-  }
-}
-
-ol.tools.Geofence.prototype.getAllGeofences = function () {
-}
-
-ol.tools.Geofence.prototype.getGeofence = function () {
-}
-
-ol.tools.Geofence.prototype.queryGeofence = function () {
-}
-
-ol.tools.Geofence.prototype.clear = function () {
-}
-
-ol.tools.Geofence.prototype.creatWatcherInternel = function () {
-}
-
-/**
- * 添加所有的被观察者
- * @param features
- */
-ol.tools.Geofence.prototype.addVisitors = function (features) {
-
-}
-
-/**
- * 更新观察者
- * @param visitor
- */
-ol.tools.Geofence.prototype.updateVisitor = function (visitor) {
-  if (this.geofences_.length > 0 && visitor instanceof ol.Feature) {
-    this.geofences_.forEach(fence => {
-      let coordinates = visitor.getGeometry().getCoordinates()
-      if (fence && fence.intersectsCoordinate(coordinates)) {
-        this.actionEnter(visitor, fence)
+class Geofence extends ol.Object {
+  static _add (source, item) {
+    if (Array.isArray(source)) {
+      if (source.indexOf(item) > -1) {
+        throw new Error('禁止添加相同id的数据')
+      } else {
+        source.push(item);
+        return false;
       }
-    })
+    } else {
+      throw new Error('不是数组！')
+    }
+  }
+  constructor (options = {}) {
+    super();
+    this.geofences_ = [];
+    this.geofencesIds_ = [];
+  }
+
+  /**
+   * 添加电子围栏
+   * @param geom
+   * @param options
+   */
+  addGeofence (geom, options) {
+    if (geom && (geom instanceof ol.geom.Polygon || geom instanceof ol.geom.Circle)) {
+      if (geom.get('id')) {
+        Geofence._add(this.geofencesIds_, geom.get('id'));
+        this.geofences_.push(geom)
+      } else {
+        geom.set('id', uuid());
+        Geofence._add(this.geofencesIds_, geom.get('id'));
+        this.geofences_.push(geom)
+      }
+    } else {
+      throw new Error('传入的不是面数据!')
+    }
+  }
+
+  getAllGeofences () {
+  }
+
+  getGeofence () {
+  }
+
+  queryGeofence () {
+  }
+
+  clear () {
+  }
+
+  creatWatcherInternel () {
+  }
+
+  /**
+   * 添加所有的被观察者
+   * @param features
+   */
+  addVisitors (features) {
+
+  }
+
+  /**
+   * 更新观察者
+   * @param visitor
+   */
+  updateVisitor (visitor) {
+    if (this.geofences_.length > 0 && visitor instanceof ol.Feature) {
+      if (visitor.get('isEnter') === undefined) visitor.set('isEnter', false);
+      for (let i = 0; i < this.geofences_.length; i++) {
+        const fence = this.geofences_[i];
+        const isEnter = visitor.get('isEnter');
+        const coordinates = visitor.getGeometry().getCoordinates();
+        const _isIntersects = fence.intersectsCoordinate(coordinates);
+        if (isEnter && _isIntersects) { // 任然停留在范围内
+          this.actionDwell(visitor, fence);
+        } else if (!isEnter && _isIntersects) { // 从外部进入范围内
+          this.actionEnter(visitor, fence);
+        } else if (isEnter && !_isIntersects) { // 离开范围
+          this.actionLeave(visitor, fence);
+        }
+      }
+    }
+  }
+
+  /**
+   * 响应进入围栏事件
+   * @param visitor
+   * @param fence
+   */
+  actionEnter (visitor, fence) {
+    visitor.set('isEnter', true);
+    this.dispatchEvent({
+      type: 'enter',
+      target: this,
+      visitor: visitor,
+      geoFences: fence
+    });
+  }
+
+  /**
+   * 响应离开围栏事件
+   * @param visitor
+   * @param fence
+   */
+  actionLeave (visitor, fence) {
+    visitor.set('isEnter', false);
+    this.dispatchEvent({
+      type: 'leave',
+      target: this,
+      visitorId: visitor,
+      geoFences: fence
+    });
+  }
+
+  /**
+   * 响应停留事件
+   * @param visitor
+   * @param fence
+   */
+  actionDwell (visitor, fence) {
+    this.dispatchEvent({
+      type: 'dwell',
+      target: this,
+      visitor: visitor,
+      geoFences: fence
+    });
+  }
+
+  removeVisitor () {
+  }
+
+  clearVisitors () {
   }
 }
 
-/**
- * 响应进入围栏事件
- * @param visitor
- * @param fence
- */
-ol.tools.Geofence.prototype.actionEnter = function (visitor, fence) {
-  this.dispatch('enter', {
-    visitor: visitor,
-    geoFences: fence
-  })
-}
-
-/**
- * 响应离开围栏事件
- * @param visitorId
- * @param fence
- */
-ol.tools.Geofence.prototype.actionLeave = function (visitorId, fence) {
-  this.dispatch('leave', {
-    visitorId: visitorId,
-    geoFencesId: fence.get('id')
-  })
-}
-
-/**
- * 响应停留事件
- * @param visitorId
- * @param fence
- */
-ol.tools.Geofence.prototype.actionDwell = function (visitorId, fence) {
-  this.dispatch('dwell', {
-    visitorId: visitorId,
-    geoFencesId: fence.get('id')
-  })
-}
-
-ol.tools.Geofence.prototype.removeVisitor = function () {
-}
-
-ol.tools.Geofence.prototype.clearVisitors = function () {
-}
-mixin(ol.tools.Geofence, Observable)
-
-let olToolsGeofence = ol.tools.Geofence
-export default olToolsGeofence
+export default Geofence
